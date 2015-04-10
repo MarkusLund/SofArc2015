@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">SofArc2015</string>
 
-    <string name="hello_world">Hello world!</string>
+    <string name="hello_world">Hello World!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_game">GameActivity</string>
+    <string name="hei_dag">Hei Dagu!</string>
 </resources>
