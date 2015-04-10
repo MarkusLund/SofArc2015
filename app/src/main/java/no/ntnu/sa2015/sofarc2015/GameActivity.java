@@ -1,6 +1,7 @@
 package no.ntnu.sa2015.sofarc2015;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,11 +13,19 @@ import java.util.ArrayList;
 
 public class GameActivity extends Activity {
 
+    BoardView boardView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game);
+
+        boardView = new BoardView(this);
+        boardView.setBackgroundColor(Color.WHITE);
+        setContentView(boardView);
+
+
+
     }
 
 
