@@ -11,23 +11,32 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class GameActivity extends Activity{
 
     BoardView boardView;
+    ArrayList<List<String>> board = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
 
-        Log.i("Test", "Halla");
+        board = readFile("map.txt");
 
-        boardView = new BoardView(this);
+        boardView = new BoardView(this, board);
         boardView.setBackgroundColor(Color.WHITE);
         setContentView(boardView);
+
+
     }
 
 
@@ -51,5 +60,29 @@ public class GameActivity extends Activity{
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public ArrayList<List<String>> readFile(String path){
+        ArrayList<List<String>> board = new ArrayList<List<String>>();
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new InputStreamReader(getAssets().open(path)));
+            String line = reader.readLine();
+            while (line != null){
+                board.add(new ArrayList<String>(Arrays.asList(line.split(" "))));
+                line = reader.readLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (reader == null){
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return board;
     }
 }

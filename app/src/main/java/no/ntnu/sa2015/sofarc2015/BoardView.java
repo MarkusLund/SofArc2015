@@ -11,6 +11,9 @@ import android.view.View;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by markuslund92 on 10.04.15.
@@ -18,21 +21,15 @@ import java.io.InputStream;
 
 public class BoardView extends View{
     Paint paint = new Paint();
+    ArrayList<List<String>> board;
 
-    public BoardView(Context context) {
+    public BoardView(Context context, ArrayList<List<String>> board) {
         super(context);
+        this.board = board;
     }
 
     @Override
     public void onDraw(Canvas canvas) {
-        try {
-            InputStream in = getContext().getAssets().open("map.txt");
-            Log.i("Halla", in.toString());
-            System.out.println(in.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         paint.setColor(Color.BLACK);
         paint.setStrokeWidth(3);
         canvas.drawRect(30, 30, 80, 80, paint);
