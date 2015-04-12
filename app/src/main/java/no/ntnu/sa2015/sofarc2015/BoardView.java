@@ -22,14 +22,13 @@ import java.util.List;
  * Created by markuslund92 on 10.04.15.
  */
 
-public class BoardView extends View implements View.OnTouchListener{
+public class BoardView extends View{
     Paint paint = new Paint();
     ArrayList<List<String>> board;
     int tileWidth;
 
     public BoardView(Context context, ArrayList<List<String>> board) {
         super(context);
-        this.setOnTouchListener(this);
         this.board = board;
 
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -46,6 +45,13 @@ public class BoardView extends View implements View.OnTouchListener{
     @Override
     public void onDraw(Canvas canvas) {
         Log.e("BoardView", "onDraw called");
+
+        drawBoard(canvas);
+
+
+    }
+
+    private void drawBoard(Canvas canvas) {
         for (int i = 0; i < board.size(); i++) {
             for (int j = 0; j < board.get(0).size(); j++) {
                 String tile = board.get(i).get(j);
@@ -80,13 +86,7 @@ public class BoardView extends View implements View.OnTouchListener{
                 paint.setColor(Color.BLACK);
                 paint.setStrokeWidth(2);
                 canvas.drawRect(0, 0, tileWidth * board.get(0).size(), tileWidth * board.size(), paint);
-
             }
         }
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        return false;
     }
 }
