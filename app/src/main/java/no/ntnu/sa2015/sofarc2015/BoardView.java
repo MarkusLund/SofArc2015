@@ -4,7 +4,9 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -16,13 +18,17 @@ import java.util.Map;
  * Created by markuslund92 on 10.04.15.
  */
 
-public class BoardView extends View{
+public class BoardView extends View implements View.OnTouchListener{
     Paint paint = new Paint();
     ArrayList<List<String>> board;
     int tileWidth, screenWidth, screenHeight;
-    Map<String, int[]> pieceCoordinates;
+    Map<String, Point> pieceCoordinates;
+    List<Point> path;
 
-    public BoardView(Context context, ArrayList<List<String>> board, int screenWidth, int screenHeight, HashMap<String, int[]> pieceCoordinates) {
+    int i = 0; //only used for testing
+
+
+    public BoardView(Context context, ArrayList<List<String>> board, int screenWidth, int screenHeight, HashMap<String, Point> pieceCoordinates) {
         super(context);
         this.board = board;
         this.screenWidth = screenWidth;
@@ -30,18 +36,95 @@ public class BoardView extends View{
 
         this.tileWidth = this.screenWidth/board.size();
         this.pieceCoordinates = pieceCoordinates;
+        this.setOnTouchListener(this);
+
+        this.path = generatePath();
+
+
+    }
+
+    private List<Point> generatePath() {
+        List<Point> path = new ArrayList<>();
+
+        path.add(new Point(0,6));
+        path.add(new Point(1,6)); //blue start
+        path.add(new Point(2,6));
+        path.add(new Point(3,6));
+        path.add(new Point(4,6));
+        path.add(new Point(5,6));
+
+        path.add(new Point(6,5));
+        path.add(new Point(6,4));
+        path.add(new Point(6,3));
+        path.add(new Point(6,2));
+        path.add(new Point(6,1));
+        path.add(new Point(6,0));
+
+        path.add(new Point(7,0)); //top middle
+
+        path.add(new Point(8,0));
+        path.add(new Point(8,1)); //red start
+        path.add(new Point(8,2));
+        path.add(new Point(8,3));
+        path.add(new Point(8,4));
+        path.add(new Point(8,5));
+
+        path.add(new Point(9,6));
+        path.add(new Point(10,6));
+        path.add(new Point(11,6));
+        path.add(new Point(12,6));
+        path.add(new Point(13,6));
+        path.add(new Point(14,6));
+
+        path.add(new Point(14,7)); //right middle
+
+        path.add(new Point(14,8));
+        path.add(new Point(13,8)); //green start
+        path.add(new Point(12,8));
+        path.add(new Point(11,8));
+        path.add(new Point(10,8));
+        path.add(new Point(9,8));
+
+        path.add(new Point(8,9));
+        path.add(new Point(8,10));
+        path.add(new Point(8,11));
+        path.add(new Point(8,12));
+        path.add(new Point(8,13));
+        path.add(new Point(8,14));
+
+        path.add(new Point(7,14)); //bottom middle
+
+        path.add(new Point(6,14));
+        path.add(new Point(6,13)); //yellow start
+        path.add(new Point(6,12));
+        path.add(new Point(6,11));
+        path.add(new Point(6,10));
+        path.add(new Point(6,9));
+
+        path.add(new Point(5,8));
+        path.add(new Point(4,8));
+        path.add(new Point(3,8));
+        path.add(new Point(2,8));
+        path.add(new Point(1,8));
+        path.add(new Point(0,8));
+
+        path.add(new Point(0,7)); //left middle
+
+        return path;
+
     }
 
     @Override
     public void onDraw(Canvas canvas) {
         Log.e("BoardView", "onDraw called");
-
         drawBoard(canvas);
         drawPieces(canvas);
     }
 
+
     private void drawPieces(Canvas canvas) {
-        for (Map.Entry<String, int[]> entry : pieceCoordinates.entrySet())
+        Log.e("BoardView", "drawPieces");
+        for (Map.Entry<String, Point> entry : pieceCoordinates.entrySet())
         {
             drawPiece(canvas, entry.getKey());
         }
@@ -59,17 +142,18 @@ public class BoardView extends View{
             paint.setColor(Color.RED);
         }
 
-        canvas.drawCircle(pieceCoordinates.get(piece)[0]*tileWidth+tileWidth/2,pieceCoordinates.get(piece)[1]*tileWidth+tileWidth/2,tileWidth/3,paint);
+        canvas.drawCircle(pieceCoordinates.get(piece).x*tileWidth+tileWidth/2,pieceCoordinates.get(piece).y*tileWidth+tileWidth/2,tileWidth/3,paint);
 
         // Draws stroke around piece
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(3);
         paint.setColor(Color.BLACK);
-        canvas.drawCircle(pieceCoordinates.get(piece)[0] * tileWidth + tileWidth / 2, pieceCoordinates.get(piece)[1] * tileWidth + tileWidth / 2, tileWidth / 3, paint);
+        canvas.drawCircle(pieceCoordinates.get(piece).x * tileWidth + tileWidth / 2, pieceCoordinates.get(piece).y * tileWidth + tileWidth / 2, tileWidth / 3, paint);
 
     }
 
     private void drawBoard(Canvas canvas) {
+        Log.e("BoardView", "drawBoard");
         for (int i = 0; i < board.size(); i++) {
             for (int j = 0; j < board.get(0).size(); j++) {
                 String tile = board.get(i).get(j);
@@ -121,4 +205,19 @@ public class BoardView extends View{
         }
     }
 
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+
+        //Only used for testing
+
+        Log.e("onTouch", "touch!");
+        pieceCoordinates.get("b1").x = path.get(i).x;
+        pieceCoordinates.get("b1").y = path.get(i).y;
+        i++;
+        if (i > path.size()-1)
+            i = 0;
+
+        this.invalidate();
+        return false;
+    }
 }

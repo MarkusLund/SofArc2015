@@ -35,7 +35,7 @@ public class GameActivity extends Activity{
     ButtonView buttonView;
     ArrayList<List<String>> board = null;
     int screenWidth, screenHeight;
-    Map<String, int[]> pieceCoordinates;
+    Map<String, Point> pieceCoordinates;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +56,7 @@ public class GameActivity extends Activity{
         getScreenSizes();
         pieceCoordinates = new HashMap<>();
         generateStartPositions();
-        boardView = new BoardView(this, board, screenWidth, screenHeight, (HashMap<String, int[]>) pieceCoordinates);
+        boardView = new BoardView(this, board, screenWidth, screenHeight, (HashMap<String, Point>) pieceCoordinates);
         boardView.setBackgroundColor(Color.WHITE);
         linLayout.addView(boardView, linLayoutParam);
 
@@ -120,46 +120,28 @@ public class GameActivity extends Activity{
 
     private void generateStartPositions() {
 
-
-
         //      Blue start positions
-        int[] cor1 = {2,2};
-        int[] cor2 = {2,3};
-        int[] cor3 = {3,2};
-        int[] cor4 = {3,3};
-        pieceCoordinates.put("b1", cor1);
-        pieceCoordinates.put("b2", cor2);
-        pieceCoordinates.put("b3", cor3);
-        pieceCoordinates.put("b4", cor4);
+        pieceCoordinates.put("b1", new Point(2,2));
+        pieceCoordinates.put("b2", new Point(2,3));
+        pieceCoordinates.put("b3", new Point(3,2));
+        pieceCoordinates.put("b4", new Point(3,3));
 
         //      Green start positions
-        int[] cor5 = {11,11};
-        int[] cor6 = {11,12};
-        int[] cor7 = {12,11};
-        int[] cor8 = {12,12};
-        pieceCoordinates.put("g1", cor5);
-        pieceCoordinates.put("g2", cor6);
-        pieceCoordinates.put("g3", cor7);
-        pieceCoordinates.put("g4", cor8);
+        pieceCoordinates.put("g1", new Point(11,11));
+        pieceCoordinates.put("g2", new Point(11,12));
+        pieceCoordinates.put("g3", new Point(12,11));
+        pieceCoordinates.put("g4", new Point(12,12));
 
         //     Red start positions
-        int[] cor9 = {11,2};
-        int[] cor10 = {11,3};
-        int[] cor11 = {12,2};
-        int[] cor12 = {12,3};
-        pieceCoordinates.put("r1", cor9);
-        pieceCoordinates.put("r2", cor10);
-        pieceCoordinates.put("r3", cor11);
-        pieceCoordinates.put("r4", cor12);
+        pieceCoordinates.put("r1", new Point(11,2));
+        pieceCoordinates.put("r2", new Point(11,3));
+        pieceCoordinates.put("r3", new Point(12,2));
+        pieceCoordinates.put("r4", new Point(12,3));
 
         //      Yellow start positions
-        int[] cor13 = {2,11};
-        int[] cor14 = {2,12};
-        int[] cor15 = {3,11};
-        int[] cor16 = {3,12};
-        pieceCoordinates.put("y1", cor13);
-        pieceCoordinates.put("y2", cor14);
-        pieceCoordinates.put("y3", cor15);
-        pieceCoordinates.put("y4", cor16);
+        pieceCoordinates.put("y1", new Point(2,11));
+        pieceCoordinates.put("y2", new Point(2,12));
+        pieceCoordinates.put("y3", new Point(3,11));
+        pieceCoordinates.put("y4", new Point(3,12));
     }
 }
