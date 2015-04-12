@@ -25,11 +25,12 @@ public class BoardView extends View{
     ArrayList<List<String>> board;
     int tileWidth, screenWidth, screenHeight;
 
-    public BoardView(Context context, ArrayList<List<String>> board) {
+    public BoardView(Context context, ArrayList<List<String>> board, int screenWidth, int screenHeigth) {
         super(context);
         this.board = board;
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeigth;
 
-        getScreenSizes(context);
         tileWidth = this.screenWidth/board.size();
 
         Map<String, String> map = new HashMap<String, String>();
@@ -86,15 +87,5 @@ public class BoardView extends View{
                 canvas.drawRect(0, 0, tileWidth * board.get(0).size(), tileWidth * board.size(), paint);
             }
         }
-    }
-    private void getScreenSizes(Context context) {
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        this.screenWidth = size.x;
-        this.screenHeight = size.y;
-//        Log.i("Width: ", "" + width);
-//        Log.i("Height: ", "" + height);
     }
 }

@@ -1,15 +1,22 @@
 package no.ntnu.sa2015.sofarc2015;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,18 +30,35 @@ import java.util.List;
 public class GameActivity extends Activity{
 
     BoardView boardView;
+    ButtonView buttonView;
     ArrayList<List<String>> board = null;
+    int screenWidth, screenHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
 
+        // creating LinearLayout
+        LinearLayout linLayout = new LinearLayout(this);
+        // specifying vertical orientation
+        linLayout.setOrientation(LinearLayout.VERTICAL);
+        // creating LayoutParams
+        LinearLayout.LayoutParams linLayoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        // set LinearLayout as a root element of the screen
+        setContentView(linLayout, linLayoutParam);
+
         board = readFile("map.txt");
 
-        boardView = new BoardView(this, board);
+        getScreenSizes();
+
+        boardView = new BoardView(this, board, screenWidth, screenHeight);
         boardView.setBackgroundColor(Color.WHITE);
-        setContentView(boardView);
+        linLayout.addView(boardView, linLayoutParam);
+
+        buttonView = new ButtonView(this, screenWidth, screenHeight);
+        linLayout.addView(buttonView, linLayoutParam);
+
     }
 
 
@@ -82,5 +106,12 @@ public class GameActivity extends Activity{
             }
         }
         return board;
+    }
+    private void getScreenSizes() {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        screenWidth = size.x;
+        screenHeight = size.y;
     }
 }
