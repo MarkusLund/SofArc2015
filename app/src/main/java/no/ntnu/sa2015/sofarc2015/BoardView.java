@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.view.WindowManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -24,21 +26,19 @@ public class BoardView extends View{
     Paint paint = new Paint();
     ArrayList<List<String>> board;
     int tileWidth, screenWidth, screenHeight;
+    Map<String, int[]> pieceCoordinates;
 
-    public BoardView(Context context, ArrayList<List<String>> board, int screenWidth, int screenHeigth) {
+    public BoardView(Context context, ArrayList<List<String>> board, int screenWidth, int screenHeigth, HashMap<String, int[]> pieceCoords) {
         super(context);
         this.board = board;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeigth;
 
-        tileWidth = this.screenWidth/board.size();
-
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("dog", "type of animal");
-        System.out.println(map.get("dog"));
-
-
+        this.tileWidth = this.screenWidth/board.size();
+        this.pieceCoordinates = pieceCoords;
     }
+
+
 
 
     @Override
@@ -46,7 +46,35 @@ public class BoardView extends View{
         Log.e("BoardView", "onDraw called");
 
         drawBoard(canvas);
+        drawPieces(canvas);
+    }
 
+    private void drawPieces(Canvas canvas) {
+        for (Map.Entry<String, int[]> entry : pieceCoordinates.entrySet())
+        {
+            drawPiece(canvas, entry.getKey());
+        }
+    }
+
+    private void drawPiece(Canvas canvas, String piece) {
+        paint.setStyle(Paint.Style.FILL);
+        if (piece.charAt(0) == 'b') {
+            paint.setColor(Color.BLUE);
+        }else if (piece.charAt(0) == 'y') {
+            paint.setColor(Color.YELLOW);
+        }else if (piece.charAt(0) == 'g') {
+            paint.setColor(Color.GREEN);
+        }else if (piece.charAt(0) == 'r') {
+            paint.setColor(Color.RED);
+        }
+
+        canvas.drawCircle(pieceCoordinates.get(piece)[0]*tileWidth+tileWidth/2,pieceCoordinates.get(piece)[1]*tileWidth+tileWidth/2,tileWidth/3,paint);
+
+        // Draws stroke around piece
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(3);
+        paint.setColor(Color.BLACK);
+        canvas.drawCircle(pieceCoordinates.get(piece)[0] * tileWidth + tileWidth / 2, pieceCoordinates.get(piece)[1] * tileWidth + tileWidth / 2, tileWidth / 3, paint);
 
     }
 
@@ -88,4 +116,5 @@ public class BoardView extends View{
             }
         }
     }
+
 }

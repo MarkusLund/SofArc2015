@@ -24,7 +24,9 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class GameActivity extends Activity{
@@ -33,6 +35,7 @@ public class GameActivity extends Activity{
     ButtonView buttonView;
     ArrayList<List<String>> board = null;
     int screenWidth, screenHeight;
+    Map<String, int[]> pieceCoordinates;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,14 +54,14 @@ public class GameActivity extends Activity{
         board = readFile("map.txt");
 
         getScreenSizes();
-
-        boardView = new BoardView(this, board, screenWidth, screenHeight);
+        pieceCoordinates = new HashMap<>();
+        generateStartPositions();
+        boardView = new BoardView(this, board, screenWidth, screenHeight, (HashMap<String, int[]>) pieceCoordinates);
         boardView.setBackgroundColor(Color.WHITE);
         linLayout.addView(boardView, linLayoutParam);
 
         buttonView = new ButtonView(this, screenWidth, screenHeight);
         linLayout.addView(buttonView, linLayoutParam);
-
     }
 
 
@@ -113,5 +116,50 @@ public class GameActivity extends Activity{
         display.getSize(size);
         screenWidth = size.x;
         screenHeight = size.y;
+    }
+
+    private void generateStartPositions() {
+
+
+
+        //      Blue start positions
+        int[] cor1 = {2,2};
+        int[] cor2 = {2,3};
+        int[] cor3 = {3,2};
+        int[] cor4 = {3,3};
+        pieceCoordinates.put("b1", cor1);
+        pieceCoordinates.put("b2", cor2);
+        pieceCoordinates.put("b3", cor3);
+        pieceCoordinates.put("b4", cor4);
+
+        //      Green start positions
+        int[] cor5 = {11,11};
+        int[] cor6 = {11,12};
+        int[] cor7 = {12,11};
+        int[] cor8 = {12,12};
+        pieceCoordinates.put("g1", cor5);
+        pieceCoordinates.put("g2", cor6);
+        pieceCoordinates.put("g3", cor7);
+        pieceCoordinates.put("g4", cor8);
+
+        //     Red start positions
+        int[] cor9 = {11,2};
+        int[] cor10 = {11,3};
+        int[] cor11 = {12,2};
+        int[] cor12 = {12,3};
+        pieceCoordinates.put("r1", cor9);
+        pieceCoordinates.put("r2", cor10);
+        pieceCoordinates.put("r3", cor11);
+        pieceCoordinates.put("r4", cor12);
+
+        //      Yellow start positions
+        int[] cor13 = {2,11};
+        int[] cor14 = {2,12};
+        int[] cor15 = {3,11};
+        int[] cor16 = {3,12};
+        pieceCoordinates.put("y1", cor13);
+        pieceCoordinates.put("y2", cor14);
+        pieceCoordinates.put("y3", cor15);
+        pieceCoordinates.put("y4", cor16);
     }
 }
