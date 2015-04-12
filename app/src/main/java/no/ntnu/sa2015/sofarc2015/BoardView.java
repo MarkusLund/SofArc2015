@@ -8,15 +8,13 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.Log;
 import android.view.Display;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by markuslund92 on 10.04.15.
@@ -25,22 +23,22 @@ import java.util.List;
 public class BoardView extends View{
     Paint paint = new Paint();
     ArrayList<List<String>> board;
-    int tileWidth;
+    int tileWidth, screenWidth, screenHeight;
 
     public BoardView(Context context, ArrayList<List<String>> board) {
         super(context);
         this.board = board;
 
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-        int height = size.y;
-        Log.i("Width: ", "" + width);
-        Log.i("Height: ", "" + height);
-        tileWidth = width/board.size();
+        getScreenSizes(context);
+        tileWidth = this.screenWidth/board.size();
+
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("dog", "type of animal");
+        System.out.println(map.get("dog"));
+
+
     }
+
 
     @Override
     public void onDraw(Canvas canvas) {
@@ -88,5 +86,15 @@ public class BoardView extends View{
                 canvas.drawRect(0, 0, tileWidth * board.get(0).size(), tileWidth * board.size(), paint);
             }
         }
+    }
+    private void getScreenSizes(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        this.screenWidth = size.x;
+        this.screenHeight = size.y;
+//        Log.i("Width: ", "" + width);
+//        Log.i("Height: ", "" + height);
     }
 }
