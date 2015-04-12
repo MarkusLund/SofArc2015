@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class GameActivity extends Activity implements View.OnTouchListener{
+public class GameActivity extends Activity{
 
     BoardView boardView;
     ArrayList<List<String>> board = null;
@@ -34,10 +34,7 @@ public class GameActivity extends Activity implements View.OnTouchListener{
 
         boardView = new BoardView(this, board);
         boardView.setBackgroundColor(Color.WHITE);
-        boardView.setOnTouchListener(this);
         setContentView(boardView);
-
-
     }
 
 
@@ -85,10 +82,5 @@ public class GameActivity extends Activity implements View.OnTouchListener{
             }
         }
         return board;
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        return false;
     }
 }
