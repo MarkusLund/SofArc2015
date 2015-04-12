@@ -1,20 +1,14 @@
 package no.ntnu.sa2015.sofarc2015;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.Rect;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
-import android.view.WindowManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -37,9 +31,6 @@ public class BoardView extends View{
         this.tileWidth = this.screenWidth/board.size();
         this.pieceCoordinates = pieceCoordinates;
     }
-
-
-
 
     @Override
     public void onDraw(Canvas canvas) {
