@@ -28,14 +28,14 @@ public class BoardView extends View{
     int tileWidth, screenWidth, screenHeight;
     Map<String, int[]> pieceCoordinates;
 
-    public BoardView(Context context, ArrayList<List<String>> board, int screenWidth, int screenHeigth, HashMap<String, int[]> pieceCoords) {
+    public BoardView(Context context, ArrayList<List<String>> board, int screenWidth, int screenHeight, HashMap<String, int[]> pieceCoordinates) {
         super(context);
         this.board = board;
         this.screenWidth = screenWidth;
-        this.screenHeight = screenHeigth;
+        this.screenHeight = screenHeight;
 
         this.tileWidth = this.screenWidth/board.size();
-        this.pieceCoordinates = pieceCoords;
+        this.pieceCoordinates = pieceCoordinates;
     }
 
 
