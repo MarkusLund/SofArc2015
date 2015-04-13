@@ -257,7 +257,6 @@ public class BoardView extends View{
         path.add(new Point(0,7)); //left middle
 
         return path;
-
     }
 
 
@@ -272,7 +271,6 @@ public class BoardView extends View{
         path.add(new Point(7,9));
 
         return path;
-
     }
 
     public List<Point> generateBlueFinishPath() {
@@ -286,7 +284,6 @@ public class BoardView extends View{
         path.add(new Point(5,7));
 
         return path;
-
     }
 
     public List<Point> generateRedFinishPath() {
@@ -300,7 +297,6 @@ public class BoardView extends View{
         path.add(new Point(7,5));
 
         return path;
-
     }
 
     public List<Point> generateGreenFinishPath() {
@@ -314,10 +310,7 @@ public class BoardView extends View{
         path.add(new Point(9,7));
 
         return path;
-
     }
-
-
 
     public String getChosenPiece() {
         return chosenPiece;
