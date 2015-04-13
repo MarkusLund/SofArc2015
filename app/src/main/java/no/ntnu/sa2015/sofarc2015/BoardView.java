@@ -19,11 +19,11 @@ import java.util.Map;
  */
 
 public class BoardView extends View{
-    Paint paint = new Paint();
-    ArrayList<List<String>> board;
-    int tileWidth, screenWidth, screenHeight;
-    Map<String, Point> pieceCoordinates;
-    List<Point> path;
+    private Paint paint = new Paint();
+    private ArrayList<List<String>> board;
+    private int tileWidth, screenWidth, screenHeight;
+    private Map<String, Point> pieceCoordinates;
+    private List<Point> path;
 
     private String chosenPiece = "none"; // Set to prevent nullPointerException
 
