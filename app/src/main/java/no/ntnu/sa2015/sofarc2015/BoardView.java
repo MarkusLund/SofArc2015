@@ -43,82 +43,62 @@ public class BoardView extends View implements View.OnTouchListener{
 
     }
 
-    private List<Point> generatePath() {
-        List<Point> path = new ArrayList<>();
 
-        path.add(new Point(0,6));
-        path.add(new Point(1,6)); //blue start
-        path.add(new Point(2,6));
-        path.add(new Point(3,6));
-        path.add(new Point(4,6));
-        path.add(new Point(5,6));
-
-        path.add(new Point(6,5));
-        path.add(new Point(6,4));
-        path.add(new Point(6,3));
-        path.add(new Point(6,2));
-        path.add(new Point(6,1));
-        path.add(new Point(6,0));
-
-        path.add(new Point(7,0)); //top middle
-
-        path.add(new Point(8,0));
-        path.add(new Point(8,1)); //red start
-        path.add(new Point(8,2));
-        path.add(new Point(8,3));
-        path.add(new Point(8,4));
-        path.add(new Point(8,5));
-
-        path.add(new Point(9,6));
-        path.add(new Point(10,6));
-        path.add(new Point(11,6));
-        path.add(new Point(12,6));
-        path.add(new Point(13,6));
-        path.add(new Point(14,6));
-
-        path.add(new Point(14,7)); //right middle
-
-        path.add(new Point(14,8));
-        path.add(new Point(13,8)); //green start
-        path.add(new Point(12,8));
-        path.add(new Point(11,8));
-        path.add(new Point(10,8));
-        path.add(new Point(9,8));
-
-        path.add(new Point(8,9));
-        path.add(new Point(8,10));
-        path.add(new Point(8,11));
-        path.add(new Point(8,12));
-        path.add(new Point(8,13));
-        path.add(new Point(8,14));
-
-        path.add(new Point(7,14)); //bottom middle
-
-        path.add(new Point(6,14));
-        path.add(new Point(6,13)); //yellow start
-        path.add(new Point(6,12));
-        path.add(new Point(6,11));
-        path.add(new Point(6,10));
-        path.add(new Point(6,9));
-
-        path.add(new Point(5,8));
-        path.add(new Point(4,8));
-        path.add(new Point(3,8));
-        path.add(new Point(2,8));
-        path.add(new Point(1,8));
-        path.add(new Point(0,8));
-
-        path.add(new Point(0,7)); //left middle
-
-        return path;
-
-    }
 
     @Override
     public void onDraw(Canvas canvas) {
         Log.e("BoardView", "onDraw called");
         drawBoard(canvas);
         drawPieces(canvas);
+        drawDice(canvas, 5);
+    }
+
+    private void drawDice(Canvas canvas, int dice) {
+        paint.setColor(Color.BLACK);
+        paint.setStyle(Paint.Style.FILL);
+
+        for (int i = 0; i < board.size(); i++) {
+            for (int j = 0; j < board.get(0).size(); j++) {
+                String tile = board.get(i).get(j);
+                switch (tile) {
+                    case "d1":
+                        if (dice != 1) {
+                            canvas.drawCircle(j*tileWidth+tileWidth/2, i*tileWidth+tileWidth/2, tileWidth / 3, paint);
+                        }
+                        break;
+                    case "d3":
+                        if (dice == 4 || dice == 5 || dice == 6){
+                            canvas.drawCircle(j*tileWidth+tileWidth/2, i*tileWidth+tileWidth/2, tileWidth / 3, paint);
+                        }
+                        break;
+                    case "d4":
+                        if (dice == 6){
+                            canvas.drawCircle(j*tileWidth+tileWidth/2, i*tileWidth+tileWidth/2, tileWidth / 3, paint);
+                        }
+                        break;
+                    case "d5":
+                        if (dice == 3 || dice == 5){
+                            canvas.drawCircle(j*tileWidth+tileWidth/2, i*tileWidth+tileWidth/2, tileWidth / 3, paint);
+                        }
+                        break;
+                    case "d6":
+                        if (dice == 6){
+                            canvas.drawCircle(j*tileWidth+tileWidth/2, i*tileWidth+tileWidth/2, tileWidth / 3, paint);
+                        }
+                        break;
+                    case "d7":
+                        if (dice == 4 || dice == 5 || dice == 6){
+                            canvas.drawCircle(j*tileWidth+tileWidth/2, i*tileWidth+tileWidth/2, tileWidth / 3, paint);
+                        }
+                        break;
+                    case "d9":
+                        if (dice != 1) {
+                            canvas.drawCircle(j*tileWidth+tileWidth/2, i*tileWidth+tileWidth/2, tileWidth / 3, paint);
+                        }
+                        break;
+                }
+            }
+        }
     }
 
 
@@ -222,5 +202,76 @@ public class BoardView extends View implements View.OnTouchListener{
 
         this.invalidate();
         return false;
+    }
+
+    private List<Point> generatePath() {
+        List<Point> path = new ArrayList<>();
+
+        path.add(new Point(0,6));
+        path.add(new Point(1,6)); //blue start
+        path.add(new Point(2,6));
+        path.add(new Point(3,6));
+        path.add(new Point(4,6));
+        path.add(new Point(5,6));
+
+        path.add(new Point(6,5));
+        path.add(new Point(6,4));
+        path.add(new Point(6,3));
+        path.add(new Point(6,2));
+        path.add(new Point(6,1));
+        path.add(new Point(6,0));
+
+        path.add(new Point(7,0)); //top middle
+
+        path.add(new Point(8,0));
+        path.add(new Point(8,1)); //red start
+        path.add(new Point(8,2));
+        path.add(new Point(8,3));
+        path.add(new Point(8,4));
+        path.add(new Point(8,5));
+
+        path.add(new Point(9,6));
+        path.add(new Point(10,6));
+        path.add(new Point(11,6));
+        path.add(new Point(12,6));
+        path.add(new Point(13,6));
+        path.add(new Point(14,6));
+
+        path.add(new Point(14,7)); //right middle
+
+        path.add(new Point(14,8));
+        path.add(new Point(13,8)); //green start
+        path.add(new Point(12,8));
+        path.add(new Point(11,8));
+        path.add(new Point(10,8));
+        path.add(new Point(9,8));
+
+        path.add(new Point(8,9));
+        path.add(new Point(8,10));
+        path.add(new Point(8,11));
+        path.add(new Point(8,12));
+        path.add(new Point(8,13));
+        path.add(new Point(8,14));
+
+        path.add(new Point(7,14)); //bottom middle
+
+        path.add(new Point(6,14));
+        path.add(new Point(6,13)); //yellow start
+        path.add(new Point(6,12));
+        path.add(new Point(6,11));
+        path.add(new Point(6,10));
+        path.add(new Point(6,9));
+
+        path.add(new Point(5,8));
+        path.add(new Point(4,8));
+        path.add(new Point(3,8));
+        path.add(new Point(2,8));
+        path.add(new Point(1,8));
+        path.add(new Point(0,8));
+
+        path.add(new Point(0,7)); //left middle
+
+        return path;
+
     }
 }
