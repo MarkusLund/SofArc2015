@@ -23,9 +23,6 @@ public class BoardView extends View{
     private ArrayList<List<String>> board;
     private int tileWidth, screenWidth, screenHeight;
     private Map<String, Point> pieceCoordinates;
-    private List<Point> path;
-    private Canvas canvas;
-
 
 
     private int diceRoll = 0;
@@ -41,7 +38,6 @@ public class BoardView extends View{
         this.tileWidth = this.screenWidth/board.size();
         this.pieceCoordinates = pieceCoordinates;
 
-        this.path = generatePath();
     }
 
     @Override
@@ -193,7 +189,7 @@ public class BoardView extends View{
     }
 
 
-    private List<Point> generatePath() {
+    public List<Point> generatePath() {
         List<Point> path = new ArrayList<>();
 
         path.add(new Point(0,6));
@@ -263,6 +259,65 @@ public class BoardView extends View{
         return path;
 
     }
+
+
+    public List<Point> generateYellowFinishPath() {
+        List<Point> path = new ArrayList<>();
+
+        path.add(new Point(6,13)); //yellow start
+        path.add(new Point(7,13));
+        path.add(new Point(7,12));
+        path.add(new Point(7,11));
+        path.add(new Point(7,10));
+        path.add(new Point(7,9));
+
+        return path;
+
+    }
+
+    public List<Point> generateBlueFinishPath() {
+        List<Point> path = new ArrayList<>();
+
+        path.add(new Point(1,6)); //blue start
+        path.add(new Point(1,7));
+        path.add(new Point(2,7));
+        path.add(new Point(3,7));
+        path.add(new Point(4,7));
+        path.add(new Point(5,7));
+
+        return path;
+
+    }
+
+    public List<Point> generateRedFinishPath() {
+        List<Point> path = new ArrayList<>();
+
+        path.add(new Point(8,1)); //red start
+        path.add(new Point(7,1));
+        path.add(new Point(7,2));
+        path.add(new Point(7,3));
+        path.add(new Point(7,4));
+        path.add(new Point(7,5));
+
+        return path;
+
+    }
+
+    public List<Point> generateGreenFinishPath() {
+        List<Point> path = new ArrayList<>();
+
+        path.add(new Point(13,8)); //green start
+        path.add(new Point(13,7));
+        path.add(new Point(12,7));
+        path.add(new Point(11,7));
+        path.add(new Point(10,7));
+        path.add(new Point(9,7));
+
+        return path;
+
+    }
+
+
 
     public String getChosenPiece() {
         return chosenPiece;
