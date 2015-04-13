@@ -204,6 +204,9 @@ public class BoardView extends View implements View.OnTouchListener{
             }
         }
     }
+    public float getBoardHeight(){
+        return tileWidth*board.size();
+    }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {

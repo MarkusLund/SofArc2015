@@ -32,7 +32,6 @@ import java.util.Map;
 public class GameActivity extends Activity{
 
     BoardView boardView;
-    ButtonView buttonView;
     ArrayList<List<String>> board = null;
     int screenWidth, screenHeight;
     Map<String, Point> pieceCoordinates;
@@ -58,10 +57,34 @@ public class GameActivity extends Activity{
         generateStartPositions();
         boardView = new BoardView(this, board, screenWidth, screenHeight, (HashMap<String, Point>) pieceCoordinates);
         boardView.setBackgroundColor(Color.WHITE);
+
+
+        linLayoutParam.height = (int) boardView.getBoardHeight();
         linLayout.addView(boardView, linLayoutParam);
 
-        buttonView = new ButtonView(this, screenWidth, screenHeight);
-        linLayout.addView(buttonView, linLayoutParam);
+
+        Button rollButton = new Button(this);
+        rollButton.setText("Roll");
+
+        Button changeButton = new Button(this);
+        changeButton.setText("Change");
+
+        Button chooseButton = new Button(this);
+        chooseButton.setText("Choose");
+
+        LinearLayout horizontalLayout = new LinearLayout(this);
+        horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(screenWidth/3, LinearLayout.LayoutParams.MATCH_PARENT, 1);
+
+
+
+        horizontalLayout.addView(rollButton, buttonParams);
+        horizontalLayout.addView(changeButton, buttonParams);
+        horizontalLayout.addView(chooseButton, buttonParams);
+
+        LinearLayout.LayoutParams buttonLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        linLayout.addView(horizontalLayout, buttonLayout);
+
     }
 
 
