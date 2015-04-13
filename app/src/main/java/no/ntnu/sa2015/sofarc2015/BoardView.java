@@ -25,7 +25,11 @@ public class BoardView extends View implements View.OnTouchListener{
     Map<String, Point> pieceCoordinates;
     List<Point> path;
 
+
     int i = 0; //only used for testing
+
+    private String chosenPiece = "none"; // Set to prevent nullPointerException
+
 
 
     public BoardView(Context context, ArrayList<List<String>> board, int screenWidth, int screenHeight, HashMap<String, Point> pieceCoordinates) {
@@ -122,6 +126,10 @@ public class BoardView extends View implements View.OnTouchListener{
             paint.setColor(Color.RED);
         }
 
+        if (piece.equals(chosenPiece)){
+            paint.setColor(Color.GRAY);
+        }
+
         canvas.drawCircle(pieceCoordinates.get(piece).x*tileWidth+tileWidth/2,pieceCoordinates.get(piece).y*tileWidth+tileWidth/2,tileWidth/3,paint);
 
         // Draws stroke around piece
@@ -194,13 +202,13 @@ public class BoardView extends View implements View.OnTouchListener{
         //Only used for testing
 
         Log.e("onTouch", "touch!");
-        pieceCoordinates.get("b1").x = path.get(i).x;
-        pieceCoordinates.get("b1").y = path.get(i).y;
+        pieceCoordinates.get(chosenPiece).x = path.get(i).x;
+        pieceCoordinates.get(chosenPiece).y = path.get(i).y;
         i++;
         if (i > path.size()-1)
             i = 0;
 
-        this.invalidate();
+        this.invalidate(); //calls the onDraw method
         return false;
     }
 
@@ -273,5 +281,14 @@ public class BoardView extends View implements View.OnTouchListener{
 
         return path;
 
+    }
+
+    public String getChosenPiece() {
+        return chosenPiece;
+    }
+
+    public void setChosenPiece(String choice) {
+        this.chosenPiece = choice;
+        this.invalidate(); //calls the onDraw method
     }
 }
