@@ -24,7 +24,11 @@ public class BoardView extends View{
     private int tileWidth, screenWidth, screenHeight;
     private Map<String, Point> pieceCoordinates;
     private List<Point> path;
+    private Canvas canvas;
 
+
+
+    private int diceRoll = 0;
     private String chosenPiece = "none"; // Set to prevent nullPointerException
 
 
@@ -45,7 +49,9 @@ public class BoardView extends View{
         Log.e("BoardView", "onDraw called");
         drawBoard(canvas);
         drawPieces(canvas);
-        drawDice(canvas, 5);
+        if (this.diceRoll != 0){
+            drawDice(canvas, this.diceRoll);
+        }
     }
 
     private void drawDice(Canvas canvas, int dice) {
@@ -128,7 +134,6 @@ public class BoardView extends View{
         paint.setStrokeWidth(3);
         paint.setColor(Color.BLACK);
         canvas.drawCircle(pieceCoordinates.get(piece).x * tileWidth + tileWidth / 2, pieceCoordinates.get(piece).y * tileWidth + tileWidth / 2, tileWidth / 3, paint);
-
     }
 
     private void drawBoard(Canvas canvas) {
@@ -266,5 +271,23 @@ public class BoardView extends View{
     public void setChosenPiece(String choice) {
         this.chosenPiece = choice;
         this.invalidate(); //calls the onDraw method
+    }
+
+    public int getDiceView() {
+        return diceRoll;
+    }
+
+    public void setDiceView(int diceRoll) {
+        this.diceRoll = diceRoll;
+        this.invalidate();
+    }
+
+    public void setPieceCoordinates(Map<String, Point> pieceCoordinates) {
+        this.pieceCoordinates = pieceCoordinates;
+        this.invalidate();
+    }
+
+    public Map<String, Point> getPieceCoordinates() {
+        return pieceCoordinates;
     }
 }
