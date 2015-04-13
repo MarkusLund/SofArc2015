@@ -31,10 +31,10 @@ import java.util.Map;
 
 public class GameActivity extends Activity{
 
-    BoardView boardView;
-    ArrayList<List<String>> board = null;
-    int screenWidth, screenHeight;
-    Map<String, Point> pieceCoordinates;
+    private BoardView boardView;
+    private ArrayList<List<String>> board = null;
+    private int screenWidth, screenHeight;
+    private Map<String, Point> pieceCoordinates;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
