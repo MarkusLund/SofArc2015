@@ -74,7 +74,7 @@ public class BoardView extends View{
                         }
                         break;
                     case "d5":
-                        if (dice == 3 || dice == 5){
+                        if (dice == 1 || dice == 3 || dice == 5){
                             canvas.drawCircle(j*tileWidth+tileWidth/2, i*tileWidth+tileWidth/2, tileWidth / 3, paint);
                         }
                         break;
