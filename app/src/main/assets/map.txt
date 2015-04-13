@@ -1,0 +1,15 @@
+B B B B B B # # # R R R R R R
+B H H H H B # r r R H H H H R
+B H 1 1 H B # r # R H 2 2 H R
+B H 1 1 H B # r # R H 2 2 H R
+B H H H H B # r # R H H H H R
+B B B B B B # r # R R R R R R
+# b # # # # d1 d2 d3 # # # # # #
+# b b b b b d4 d5 d6 g g g g g #
+# # # # # # d7 d8 d9 # # # # g #
+Y Y Y Y Y Y # y # G G G G G G
+Y H H H H Y # y # G H H H H G
+Y H 3 3 H Y # y # G H 4 4 H G
+Y H 3 3 H Y # y # G H 4 4 H G
+Y H H H H Y y y # G H H H H G
+Y Y Y Y Y Y # # # G G G G G G
