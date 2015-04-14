@@ -90,7 +90,6 @@ public class GameActivity extends Activity{
 
         helpButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                rollDiceAction();
             }
         });
 
