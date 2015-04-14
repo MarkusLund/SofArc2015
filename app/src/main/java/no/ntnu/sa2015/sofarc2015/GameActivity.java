@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
@@ -39,6 +38,7 @@ public class GameActivity extends Activity{
     private Map<String, Point> redCoordinates;
     private Map<String, Point> greenCoordinates;
     private Map<String, Point> yellowCoordinates;
+    private List<Point> pathCoordinates;
 
     private char currentPlayer;
 
@@ -71,6 +71,7 @@ public class GameActivity extends Activity{
         currentPlayer = 'b'; // Sets the current player
         boardView = new BoardView(this, board, screenWidth, screenHeight, (HashMap<String, Point>) pieceCoordinates);
         boardView.setBackgroundColor(Color.WHITE);
+        pathCoordinates = boardView.generatePath();
 
 
         linLayoutParam.height = (int) boardView.getBoardHeight();
@@ -302,32 +303,52 @@ public class GameActivity extends Activity{
 
     }
 
-    private Point nextCoordinates() {
-        Point newCoordinates = null;
-        int diceCount = boardView.getDiceView();
+    private void startMove() {
         Map<String, Point> pieceCoordinates = boardView.getPieceCoordinates();
-        List<Point> pathCoordinates = boardView.generatePath();
-        int indexCurrentCoordinates = pathCoordinates.indexOf(pieceCoordinates.get(boardView.getChosenPiece()));
-        Log.i("index", indexCurrentCoordinates + "");
-
-        if (indexCurrentCoordinates == -1) {
-            switch (currentPlayer) {
-                case 'b':
-                    return new Point(1, 6);
-                case 'r':
-                    return new Point(8, 1);
-                case 'g':
-                    return new Point(13, 8);
-                case 'y':
-                    return new Point(6, 13);
-            }
-        } else {
-
-            indexCurrentCoordinates += diceCount;
-            newCoordinates = pathCoordinates.get(indexCurrentCoordinates % pathCoordinates.size());
-            return newCoordinates;
+        switch (currentPlayer) {
+            case 'b':
+                pieceCoordinates.put(boardView.getChosenPiece(), new Point(1, 6));
+                boardView.setPieceCoordinates(pieceCoordinates);
+                break;
+            case 'r':
+                pieceCoordinates.put(boardView.getChosenPiece(), new Point(8, 1));
+                boardView.setPieceCoordinates(pieceCoordinates);
+                break;
+            case 'g':
+                pieceCoordinates.put(boardView.getChosenPiece(), new Point(13, 8));
+                boardView.setPieceCoordinates(pieceCoordinates);
+                break;
+            case 'y':
+                pieceCoordinates.put(boardView.getChosenPiece(), new Point(6, 13));
+                boardView.setPieceCoordinates(pieceCoordinates);
+                break;
         }
-        return newCoordinates;
+
+    }
+
+    private void movePiece(){
+
+        Map<String, Point> movedPieceCoordinates = boardView.getPieceCoordinates();
+        int diceRoll = boardView.getDiceView();
+        String chosenPiece = boardView.getChosenPiece();
+        int oldPathIndexOfPiece = getPathIndex(movedPieceCoordinates.get(boardView.getChosenPiece()));
+        if (oldPathIndexOfPiece == -1){
+            startMove();
+        }
+        else {
+            for (int i = 0; i < diceRoll; i++) {
+                    oldPathIndexOfPiece++;
+                    movedPieceCoordinates.put(chosenPiece, pathCoordinates.get(oldPathIndexOfPiece));
+                    boardView.setPieceCoordinates(movedPieceCoordinates);
+            }
+        }
+
+
+   }
+
+
+    private int getPathIndex(Point point){
+        return pathCoordinates.lastIndexOf(point);
     }
 
     private Point nextFinishCoord(Point oldCoordinate, int stepsLeft) {
