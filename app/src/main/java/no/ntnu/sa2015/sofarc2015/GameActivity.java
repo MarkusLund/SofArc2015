@@ -349,6 +349,8 @@ public class GameActivity extends Activity{
             builder.setPositiveButton(R.string.end_turn_finish, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     movePiece();
+
+                    endTurn();
                 }
             });
 
@@ -370,71 +372,77 @@ public class GameActivity extends Activity{
 
     }
 
+    private void endTurn() {
+
+        //change current player
+
+
+        //set chosen piece to null
+        chosenPieceToMove = null;
+        boardView.setChosenPiece(chosenPieceToMove);
+
+    }
+
     private void exitHomeMove() {
         Map<String, Point> pieceCoordinates = boardView.getPieceCoordinates();
         switch (currentPlayer) {
             case 'b':
                 pieceCoordinates.put(boardView.getChosenPiece(), new Point(1, 6));
-                boardView.setPieceCoordinates(pieceCoordinates);
                 break;
             case 'r':
                 pieceCoordinates.put(boardView.getChosenPiece(), new Point(8, 1));
-                boardView.setPieceCoordinates(pieceCoordinates);
                 break;
             case 'g':
                 pieceCoordinates.put(boardView.getChosenPiece(), new Point(13, 8));
-                boardView.setPieceCoordinates(pieceCoordinates);
                 break;
             case 'y':
                 pieceCoordinates.put(boardView.getChosenPiece(), new Point(6, 13));
-                boardView.setPieceCoordinates(pieceCoordinates);
                 break;
         }
+        boardView.setPieceCoordinates(pieceCoordinates);
 
     }
 
     private void movePiece(){
 
-        pieceCoordinates = boardView.getPieceCoordinates();
         int diceRoll = dice.getRoll();
-        String chosenPiece = boardView.getChosenPiece();
-        int oldPathIndexOfPiece = getPathIndex(pieceCoordinates.get(chosenPiece));
+        int oldPathIndexOfPiece = getPathIndex(pieceCoordinates.get(chosenPieceToMove));
 
-        if (pathCoordinates.contains(pieceCoordinates.get(chosenPiece))){ // if the piece is on the Path
+        if (pathCoordinates.contains(pieceCoordinates.get(chosenPieceToMove))){ // if the piece is on the Path
             for (int i = 0; i < diceRoll; i++) {
                 oldPathIndexOfPiece++;
-                if (oldPathIndexOfPiece == 52 && chosenPiece.charAt(0) == 'b') { // if at blue finish, enter blue safezone
+                if (oldPathIndexOfPiece == 52 && chosenPieceToMove.charAt(0) == 'b') { // if at blue finish, enter blue safezone
                     nextFinishCoord(diceRoll-i);
                     break;
                 }
-                if (oldPathIndexOfPiece == 13 && chosenPiece.charAt(0) == 'r') {
+                if (oldPathIndexOfPiece == 13 && chosenPieceToMove.charAt(0) == 'r') {
                     nextFinishCoord(diceRoll-i);
                     break;
                 }
-                if (oldPathIndexOfPiece == 26 && chosenPiece.charAt(0) == 'g') {
+                if (oldPathIndexOfPiece == 26 && chosenPieceToMove.charAt(0) == 'g') {
                     nextFinishCoord(diceRoll - i);
                     break;
                 }
-                if (oldPathIndexOfPiece == 39 && chosenPiece.charAt(0) == 'y') {
+                if (oldPathIndexOfPiece == 39 && chosenPieceToMove.charAt(0) == 'y') {
                     nextFinishCoord(diceRoll - i);
                     break;
                 }
                 else {
-                    pieceCoordinates.put(chosenPiece, pathCoordinates.get(oldPathIndexOfPiece%52));
+                    pieceCoordinates.put(chosenPieceToMove, pathCoordinates.get(oldPathIndexOfPiece%52));
                     boardView.setPieceCoordinates(pieceCoordinates);
                 }
             }
         }
-        else if (bluePathCoordinates.contains(pieceCoordinates.get(chosenPiece))){
+        else if (bluePathCoordinates.contains(pieceCoordinates.get(chosenPieceToMove))){
             nextFinishCoord(diceRoll);
             }
-        else if (redPathCoordinates.contains(pieceCoordinates.get(chosenPiece))){
+        else if (redPathCoordinates.contains(pieceCoordinates.get(chosenPieceToMove))){
             nextFinishCoord(diceRoll);
         }
-        else if (greenPathCoordinates.contains(pieceCoordinates.get(chosenPiece))){
+        else if (greenPathCoordinates.contains(pieceCoordinates.get(chosenPieceToMove))){
             nextFinishCoord(diceRoll);
         }
-        else if (yellowPathCoordinates.contains(pieceCoordinates.get(chosenPiece))){
+        else if (yellowPathCoordinates.contains(pieceCoordinates.get(chosenPieceToMove))){
             nextFinishCoord(diceRoll);
         }
 
@@ -443,22 +451,17 @@ public class GameActivity extends Activity{
                 exitHomeMove();
             //}
         }
-
-
    }
 
     private void nextFinishCoord(int stepsLeft) {
         boolean towardsGoal = true;
-        String chosenPiece = boardView.getChosenPiece();
-        pieceCoordinates = boardView.getPieceCoordinates();
         switch (currentPlayer) {
             case 'b':
-                int indexBlue = bluePathCoordinates.indexOf(pieceCoordinates.get(chosenPiece));
+                int indexBlue = bluePathCoordinates.indexOf(pieceCoordinates.get(chosenPieceToMove));
                 Log.e("initial indexBlue", indexBlue+"");
                 if (indexBlue + stepsLeft == 5){
-                    pieceCoordinates.remove(chosenPiece);
-                    pieceCoordinates.remove(chosenPiece);
-                    blueCoordinates.remove(chosenPiece);
+                    pieceCoordinates.remove(chosenPieceToMove);
+                    blueCoordinates.remove(chosenPieceToMove);
                     boardView.setPieceCoordinates(pieceCoordinates);
                     Log.e("Winner", indexBlue +"  "+ stepsLeft);
                     break;
@@ -472,17 +475,16 @@ public class GameActivity extends Activity{
                         i--;
                     }
                     Log.e("index", indexBlue+"");
-                    pieceCoordinates.put(chosenPiece, bluePathCoordinates.get(indexBlue));
+                    pieceCoordinates.put(chosenPieceToMove, bluePathCoordinates.get(indexBlue));
                     boardView.setPieceCoordinates(pieceCoordinates);
                 }
                 break;
             case 'r':
-                int indexRed = redPathCoordinates.indexOf(pieceCoordinates.get(chosenPiece));
+                int indexRed = redPathCoordinates.indexOf(pieceCoordinates.get(chosenPieceToMove));
                 Log.e("initial indexRed", indexRed+"");
                 if (indexRed + stepsLeft == 5){
-                    pieceCoordinates.remove(chosenPiece);
-                    pieceCoordinates.remove(chosenPiece);
-                    redCoordinates.remove(chosenPiece);
+                    pieceCoordinates.remove(chosenPieceToMove);
+                    redCoordinates.remove(chosenPieceToMove);
                     boardView.setPieceCoordinates(pieceCoordinates);
                     Log.e("Winner", indexRed +"  "+ stepsLeft);
                     break;
@@ -496,17 +498,16 @@ public class GameActivity extends Activity{
                         i--;
                     }
                     Log.e("index", indexRed+"");
-                    pieceCoordinates.put(chosenPiece, redPathCoordinates.get(indexRed));
+                    pieceCoordinates.put(chosenPieceToMove, redPathCoordinates.get(indexRed));
                     boardView.setPieceCoordinates(pieceCoordinates);
                 }
                 break;
             case 'g':
-                int indexGreen = greenPathCoordinates.indexOf(pieceCoordinates.get(chosenPiece));
+                int indexGreen = greenPathCoordinates.indexOf(pieceCoordinates.get(chosenPieceToMove));
                 Log.e("initial indexGreen", indexGreen+"");
                 if (indexGreen + stepsLeft == 5){
-                    pieceCoordinates.remove(chosenPiece);
-                    pieceCoordinates.remove(chosenPiece);
-                    greenCoordinates.remove(chosenPiece);
+                    pieceCoordinates.remove(chosenPieceToMove);
+                    greenCoordinates.remove(chosenPieceToMove);
                     boardView.setPieceCoordinates(pieceCoordinates);
                     Log.e("Winner", indexGreen +"  "+ stepsLeft);
                     break;
@@ -520,17 +521,16 @@ public class GameActivity extends Activity{
                         i--;
                     }
                     Log.e("index", indexGreen+"");
-                    pieceCoordinates.put(chosenPiece, greenPathCoordinates.get(indexGreen));
+                    pieceCoordinates.put(chosenPieceToMove, greenPathCoordinates.get(indexGreen));
                     boardView.setPieceCoordinates(pieceCoordinates);
                 }
                 break;
             case 'y':
-                int indexYellow = yellowPathCoordinates.indexOf(pieceCoordinates.get(chosenPiece));
+                int indexYellow = yellowPathCoordinates.indexOf(pieceCoordinates.get(chosenPieceToMove));
                 Log.e("initial indexYellow", indexYellow+"");
                 if (indexYellow + stepsLeft == 5){
-                    pieceCoordinates.remove(chosenPiece);
-                    pieceCoordinates.remove(chosenPiece);
-                    yellowCoordinates.remove(chosenPiece);
+                    pieceCoordinates.remove(chosenPieceToMove);
+                    yellowCoordinates.remove(chosenPieceToMove);
                     boardView.setPieceCoordinates(pieceCoordinates);
                     Log.e("Winner", indexYellow +"  "+ stepsLeft);
                     break;
@@ -544,7 +544,7 @@ public class GameActivity extends Activity{
                         i--;
                     }
                     Log.e("index", indexYellow+"");
-                    pieceCoordinates.put(chosenPiece, yellowPathCoordinates.get(indexYellow));
+                    pieceCoordinates.put(chosenPieceToMove, yellowPathCoordinates.get(indexYellow));
                     boardView.setPieceCoordinates(pieceCoordinates);
                 }
                 break;
