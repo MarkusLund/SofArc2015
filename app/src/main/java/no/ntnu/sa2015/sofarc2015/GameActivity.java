@@ -370,10 +370,32 @@ public class GameActivity extends Activity{
 
     }
 
+    private void exitHomeMove() {
+        Map<String, Point> pieceCoordinates = boardView.getPieceCoordinates();
+        switch (currentPlayer) {
+            case 'b':
+                pieceCoordinates.put(boardView.getChosenPiece(), new Point(1, 6));
+                boardView.setPieceCoordinates(pieceCoordinates);
+                break;
+            case 'r':
+                pieceCoordinates.put(boardView.getChosenPiece(), new Point(8, 1));
+                boardView.setPieceCoordinates(pieceCoordinates);
+                break;
+            case 'g':
+                pieceCoordinates.put(boardView.getChosenPiece(), new Point(13, 8));
+                boardView.setPieceCoordinates(pieceCoordinates);
+                break;
+            case 'y':
+                pieceCoordinates.put(boardView.getChosenPiece(), new Point(6, 13));
+                boardView.setPieceCoordinates(pieceCoordinates);
+                break;
+        }
 
+    }
 
     private void movePiece(){
 
+        pieceCoordinates = boardView.getPieceCoordinates();
         int diceRoll = dice.getRoll();
         String chosenPiece = boardView.getChosenPiece();
         int oldPathIndexOfPiece = getPathIndex(pieceCoordinates.get(chosenPiece));
@@ -382,74 +404,150 @@ public class GameActivity extends Activity{
             for (int i = 0; i < diceRoll; i++) {
                 oldPathIndexOfPiece++;
                 if (oldPathIndexOfPiece == 52 && chosenPiece.charAt(0) == 'b') { // if at blue finish, enter blue safezone
-                    pieceCoordinates.put(chosenPiece, bluePathCoordinates.get(0));
+                    nextFinishCoord(diceRoll-i);
                     break;
                 }
                 if (oldPathIndexOfPiece == 13 && chosenPiece.charAt(0) == 'r') {
-                    pieceCoordinates.put(chosenPiece, redPathCoordinates.get(0));
+                    nextFinishCoord(diceRoll-i);
                     break;
                 }
                 if (oldPathIndexOfPiece == 26 && chosenPiece.charAt(0) == 'g') {
-                    pieceCoordinates.put(chosenPiece, greenPathCoordinates.get(0));
+                    nextFinishCoord(diceRoll - i);
                     break;
                 }
                 if (oldPathIndexOfPiece == 39 && chosenPiece.charAt(0) == 'y') {
-                    pieceCoordinates.put(chosenPiece, yellowPathCoordinates.get(0));
+                    nextFinishCoord(diceRoll - i);
                     break;
                 }
                 else {
                     pieceCoordinates.put(chosenPiece, pathCoordinates.get(oldPathIndexOfPiece%52));
+                    boardView.setPieceCoordinates(pieceCoordinates);
                 }
-                boardView.setPieceCoordinates(pieceCoordinates);
             }
         }
         else if (bluePathCoordinates.contains(pieceCoordinates.get(chosenPiece))){
-            pieceCoordinates.put(chosenPiece, bluePathCoordinates.get(1));
-        }
+            nextFinishCoord(diceRoll);
+            }
         else if (redPathCoordinates.contains(pieceCoordinates.get(chosenPiece))){
-            pieceCoordinates.put(chosenPiece, redPathCoordinates.get(1));
+            nextFinishCoord(diceRoll);
         }
         else if (greenPathCoordinates.contains(pieceCoordinates.get(chosenPiece))){
-            pieceCoordinates.put(chosenPiece, greenPathCoordinates.get(1));
+            nextFinishCoord(diceRoll);
         }
         else if (yellowPathCoordinates.contains(pieceCoordinates.get(chosenPiece))){
-            pieceCoordinates.put(chosenPiece, yellowPathCoordinates.get(1));
+            nextFinishCoord(diceRoll);
         }
+
         else{// if in home area, move to start
-            startMove();
+          //  if (dice.getRoll() == 6) {
+                exitHomeMove();
+            //}
         }
-        //Updates the board with new positions
-        boardView.setPieceCoordinates(pieceCoordinates);
 
 
    }
 
-    private void startMove() {
+    private void nextFinishCoord(int stepsLeft) {
+        boolean towardsGoal = true;
+        String chosenPiece = boardView.getChosenPiece();
+        pieceCoordinates = boardView.getPieceCoordinates();
         switch (currentPlayer) {
             case 'b':
-                pieceCoordinates.put(boardView.getChosenPiece(), new Point(1, 6));
+                int indexBlue = bluePathCoordinates.indexOf(pieceCoordinates.get(chosenPiece));
+                Log.e("initial indexBlue", indexBlue+"");
+                if (indexBlue + stepsLeft == 5){
+                    pieceCoordinates.remove(chosenPiece);
+                    pieceCoordinates.remove(chosenPiece);
+                    blueCoordinates.remove(chosenPiece);
+                    boardView.setPieceCoordinates(pieceCoordinates);
+                    Log.e("Winner", indexBlue +"  "+ stepsLeft);
+                    break;
+                }
+                for (int i = stepsLeft; i >= 1; i--) {
+                    Log.e("for loop", i + "");
+                    indexBlue = towardsGoal ? indexBlue + 1 : indexBlue - 1;
+                    towardsGoal = indexBlue==5 ? !towardsGoal : towardsGoal;
+                    if (indexBlue==5){
+                        indexBlue = 4;
+                        i--;
+                    }
+                    Log.e("index", indexBlue+"");
+                    pieceCoordinates.put(chosenPiece, bluePathCoordinates.get(indexBlue));
+                    boardView.setPieceCoordinates(pieceCoordinates);
+                }
                 break;
             case 'r':
-                pieceCoordinates.put(boardView.getChosenPiece(), new Point(8, 1));
+                int indexRed = redPathCoordinates.indexOf(pieceCoordinates.get(chosenPiece));
+                Log.e("initial indexRed", indexRed+"");
+                if (indexRed + stepsLeft == 5){
+                    pieceCoordinates.remove(chosenPiece);
+                    pieceCoordinates.remove(chosenPiece);
+                    redCoordinates.remove(chosenPiece);
+                    boardView.setPieceCoordinates(pieceCoordinates);
+                    Log.e("Winner", indexRed +"  "+ stepsLeft);
+                    break;
+                }
+                for (int i = stepsLeft; i >= 1; i--) {
+                    Log.e("for loop", i + "");
+                    indexRed = towardsGoal ? indexRed + 1 : indexRed - 1;
+                    towardsGoal = indexRed==5 ? !towardsGoal : towardsGoal;
+                    if (indexRed==5){
+                        indexRed = 4;
+                        i--;
+                    }
+                    Log.e("index", indexRed+"");
+                    pieceCoordinates.put(chosenPiece, redPathCoordinates.get(indexRed));
+                    boardView.setPieceCoordinates(pieceCoordinates);
+                }
                 break;
             case 'g':
-                pieceCoordinates.put(boardView.getChosenPiece(), new Point(13, 8));
+                int indexGreen = greenPathCoordinates.indexOf(pieceCoordinates.get(chosenPiece));
+                Log.e("initial indexGreen", indexGreen+"");
+                if (indexGreen + stepsLeft == 5){
+                    pieceCoordinates.remove(chosenPiece);
+                    pieceCoordinates.remove(chosenPiece);
+                    greenCoordinates.remove(chosenPiece);
+                    boardView.setPieceCoordinates(pieceCoordinates);
+                    Log.e("Winner", indexGreen +"  "+ stepsLeft);
+                    break;
+                }
+                for (int i = stepsLeft; i >= 1; i--) {
+                    Log.e("for loop", i + "");
+                    indexGreen = towardsGoal ? indexGreen + 1 : indexGreen - 1;
+                    towardsGoal = indexGreen==5 ? !towardsGoal : towardsGoal;
+                    if (indexGreen==5){
+                        indexGreen = 4;
+                        i--;
+                    }
+                    Log.e("index", indexGreen+"");
+                    pieceCoordinates.put(chosenPiece, greenPathCoordinates.get(indexGreen));
+                    boardView.setPieceCoordinates(pieceCoordinates);
+                }
                 break;
             case 'y':
-                pieceCoordinates.put(boardView.getChosenPiece(), new Point(6, 13));
+                int indexYellow = yellowPathCoordinates.indexOf(pieceCoordinates.get(chosenPiece));
+                Log.e("initial indexYellow", indexYellow+"");
+                if (indexYellow + stepsLeft == 5){
+                    pieceCoordinates.remove(chosenPiece);
+                    pieceCoordinates.remove(chosenPiece);
+                    yellowCoordinates.remove(chosenPiece);
+                    boardView.setPieceCoordinates(pieceCoordinates);
+                    Log.e("Winner", indexYellow +"  "+ stepsLeft);
+                    break;
+                }
+                for (int i = stepsLeft; i >= 1; i--) {
+                    Log.e("for loop", i + "");
+                    indexYellow = towardsGoal ? indexYellow + 1 : indexYellow - 1;
+                    towardsGoal = indexYellow==5 ? !towardsGoal : towardsGoal;
+                    if (indexYellow==5){
+                        indexYellow = 4;
+                        i--;
+                    }
+                    Log.e("index", indexYellow+"");
+                    pieceCoordinates.put(chosenPiece, yellowPathCoordinates.get(indexYellow));
+                    boardView.setPieceCoordinates(pieceCoordinates);
+                }
                 break;
-        }
-
-        //Updates the board with new positions
-        boardView.setPieceCoordinates(pieceCoordinates);
-
-
-    }
-
-    private void nextFinishCoord(Point oldCoordinate, int stepsLeft) {
-        switch (currentPlayer) {
-            case 'b':
-                Log.e("eat pie", "funny shit");
         }
     }
 
