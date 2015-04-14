@@ -225,11 +225,6 @@ public class GameActivity extends Activity{
         }
     }
 
-    private void rollDiceAction() {
-        int roll = (int) (Math.random()*6+1);
-        boardView.setDiceView(roll);
-    }
-
     private void changePieceAction() {
         String currentPiece = boardView.getChosenPiece();
         switch (currentPiece.charAt(0)) {
