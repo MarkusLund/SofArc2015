@@ -11,7 +11,6 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -39,8 +38,10 @@ public class GameActivity extends Activity{
     private Map<String, Point> greenCoordinates;
     private Map<String, Point> yellowCoordinates;
     private List<Point> pathCoordinates;
+    private Dice dice;
 
     private char currentPlayer;
+    private Map<String, Point> movedPieceCoordinates;
 
 
     @Override
@@ -57,8 +58,10 @@ public class GameActivity extends Activity{
         setContentView(linLayout, linLayoutParam);
 
         board = readFile("map.txt");
+        this.dice = new Dice();
 
         getScreenSizes();
+
         pieceCoordinates = new HashMap<>();
         generateStartPositions();
 
@@ -95,13 +98,21 @@ public class GameActivity extends Activity{
 
         changeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                changePieceAction();
+                changeButtonAction();
             }
         });
 
         chooseButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                choosePieceAction();
+                chooseButtonAction();
+            }
+        });
+
+        boardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Updates dice.roll value to new int, and updates the BoardView with the new dice value
+                boardView.setDiceView(dice.rollDice());
             }
         });
 
@@ -225,7 +236,7 @@ public class GameActivity extends Activity{
         }
     }
 
-    private void changePieceAction() {
+    private void changeButtonAction() {
         String currentPiece = boardView.getChosenPiece();
         switch (currentPiece.charAt(0)) {
             case 'b':
@@ -268,8 +279,10 @@ public class GameActivity extends Activity{
         }
     }
 
-    private void choosePieceAction(){
-        if (boardView.getDiceView() == 0){boardView.rollDiceAction();}
+    private void chooseButtonAction(){
+        if (dice.getRoll() == 0){
+            boardView.setDiceView(dice.rollDice());
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -324,8 +337,8 @@ public class GameActivity extends Activity{
 
     private void movePiece(){
 
-        Map<String, Point> movedPieceCoordinates = boardView.getPieceCoordinates();
-        int diceRoll = boardView.getDiceView();
+        movedPieceCoordinates = boardView.getPieceCoordinates();
+        int diceRoll = dice.getRoll();
         String chosenPiece = boardView.getChosenPiece();
         int oldPathIndexOfPiece = getPathIndex(movedPieceCoordinates.get(boardView.getChosenPiece()));
         if (oldPathIndexOfPiece == -1){

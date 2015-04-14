@@ -23,6 +23,8 @@ public class BoardView extends View{
     private ArrayList<List<String>> board;
     private int tileWidth, screenWidth, screenHeight;
     private Map<String, Point> pieceCoordinates;
+    private final int textSize;
+    private final int offset;
 
 
     private int diceRoll = 0;
@@ -38,16 +40,9 @@ public class BoardView extends View{
         this.tileWidth = this.screenWidth/board.size();
         this.pieceCoordinates = pieceCoordinates;
 
-    }
+        offset = (int) (getBoardHeight()/42);
+        textSize = (int) (getBoardWidth()/20);
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        rollDiceAction();
-        return super.onTouchEvent(event);
-    }
-    public void rollDiceAction() {
-        int roll = (int) (Math.random()*6+1);
-        setDiceView(roll);
     }
 
     @Override
@@ -55,57 +50,69 @@ public class BoardView extends View{
         Log.e("BoardView", "onDraw called");
         drawBoard(canvas);
         drawPieces(canvas);
-        if (this.diceRoll != 0){
-            drawDice(canvas, this.diceRoll);
-        }
+        drawDice(canvas, this.diceRoll);
     }
 
     private void drawDice(Canvas canvas, int dice) {
         paint.setColor(Color.BLACK);
         paint.setStyle(Paint.Style.FILL);
 
-        for (int i = 0; i < board.size(); i++) {
-            for (int j = 0; j < board.get(0).size(); j++) {
-                String tile = board.get(i).get(j);
-                switch (tile) {
-                    case "d1":
-                        if (dice != 1) {
-                            canvas.drawCircle(j*tileWidth+tileWidth/2, i*tileWidth+tileWidth/2, tileWidth / 3, paint);
-                        }
-                        break;
-                    case "d3":
-                        if (dice == 4 || dice == 5 || dice == 6){
-                            canvas.drawCircle(j*tileWidth+tileWidth/2, i*tileWidth+tileWidth/2, tileWidth / 3, paint);
-                        }
-                        break;
-                    case "d4":
-                        if (dice == 6){
-                            canvas.drawCircle(j*tileWidth+tileWidth/2, i*tileWidth+tileWidth/2, tileWidth / 3, paint);
-                        }
-                        break;
-                    case "d5":
-                        if (dice == 1 || dice == 3 || dice == 5){
-                            canvas.drawCircle(j*tileWidth+tileWidth/2, i*tileWidth+tileWidth/2, tileWidth / 3, paint);
-                        }
-                        break;
-                    case "d6":
-                        if (dice == 6){
-                            canvas.drawCircle(j*tileWidth+tileWidth/2, i*tileWidth+tileWidth/2, tileWidth / 3, paint);
-                        }
-                        break;
-                    case "d7":
-                        if (dice == 4 || dice == 5 || dice == 6){
-                            canvas.drawCircle(j*tileWidth+tileWidth/2, i*tileWidth+tileWidth/2, tileWidth / 3, paint);
-                        }
-                        break;
-                    case "d9":
-                        if (dice != 1) {
-                            canvas.drawCircle(j*tileWidth+tileWidth/2, i*tileWidth+tileWidth/2, tileWidth / 3, paint);
-                        }
-                        break;
+        if (dice == 0){
+            paint.setTextSize(textSize);
+            paint.setFakeBoldText(true);
+            paint.setTextAlign(Paint.Align.CENTER);
+
+            canvas.drawText("TAP", getBoardWidth() / 2, getBoardHeight() / 2 - textSize + offset, paint);
+            canvas.drawText("TO", getBoardWidth() / 2, getBoardHeight() / 2 + offset, paint);
+            canvas.drawText("ROLL", getBoardWidth()/2, getBoardHeight()/2+textSize+offset, paint);
+
+        }else {
+
+
+            for (int i = 0; i < board.size(); i++) {
+                for (int j = 0; j < board.get(0).size(); j++) {
+                    String tile = board.get(i).get(j);
+                    switch (tile) {
+                        case "d1":
+                            if (dice != 1) {
+                                canvas.drawCircle(j * tileWidth + tileWidth / 2, i * tileWidth + tileWidth / 2, tileWidth / 3, paint);
+                            }
+                            break;
+                        case "d3":
+                            if (dice == 4 || dice == 5 || dice == 6) {
+                                canvas.drawCircle(j * tileWidth + tileWidth / 2, i * tileWidth + tileWidth / 2, tileWidth / 3, paint);
+                            }
+                            break;
+                        case "d4":
+                            if (dice == 6) {
+                                canvas.drawCircle(j * tileWidth + tileWidth / 2, i * tileWidth + tileWidth / 2, tileWidth / 3, paint);
+                            }
+                            break;
+                        case "d5":
+                            if (dice == 1 || dice == 3 || dice == 5) {
+                                canvas.drawCircle(j * tileWidth + tileWidth / 2, i * tileWidth + tileWidth / 2, tileWidth / 3, paint);
+                            }
+                            break;
+                        case "d6":
+                            if (dice == 6) {
+                                canvas.drawCircle(j * tileWidth + tileWidth / 2, i * tileWidth + tileWidth / 2, tileWidth / 3, paint);
+                            }
+                            break;
+                        case "d7":
+                            if (dice == 4 || dice == 5 || dice == 6) {
+                                canvas.drawCircle(j * tileWidth + tileWidth / 2, i * tileWidth + tileWidth / 2, tileWidth / 3, paint);
+                            }
+                            break;
+                        case "d9":
+                            if (dice != 1) {
+                                canvas.drawCircle(j * tileWidth + tileWidth / 2, i * tileWidth + tileWidth / 2, tileWidth / 3, paint);
+                            }
+                            break;
+                    }
                 }
             }
         }
+
     }
 
 
@@ -196,6 +203,10 @@ public class BoardView extends View{
     }
     public float getBoardHeight(){
         return tileWidth*board.size();
+    }
+
+    public float getBoardWidth(){
+        return tileWidth*board.get(0).size();
     }
 
 
@@ -331,9 +342,9 @@ public class BoardView extends View{
         this.invalidate(); //calls the onDraw method
     }
 
-    public int getDiceView() {
-        return diceRoll;
-    }
+//    public int getDiceView() {
+//        return diceRoll;
+//    }
 
     public void setDiceView(int diceRoll) {
         this.diceRoll = diceRoll;
