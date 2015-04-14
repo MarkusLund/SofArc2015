@@ -48,6 +48,7 @@ public class GameActivity extends Activity{
     private Map<String, Point> movedPieceCoordinates;
     private int nofSoundFiles;
     private int[] soundFiles;
+    private String chosenPieceToMove;
 
 
     @Override
@@ -270,45 +271,48 @@ public class GameActivity extends Activity{
     }
 
     private void changeButtonAction() {
-        String currentPiece = boardView.getChosenPiece();
-        switch (currentPiece.charAt(0)) {
-            case 'b':
-                List<String> bList = new ArrayList<>(blueCoordinates.keySet());
-                Collections.sort(bList);
-                boardView.setChosenPiece(bList.get((bList.indexOf(currentPiece) + 1)%(bList.size())));
-                break;
-            case 'r':
-                List<String> rList = new ArrayList<>(redCoordinates.keySet());
-                Collections.sort(rList);
-                boardView.setChosenPiece(rList.get((rList.indexOf(currentPiece) + 1)%(rList.size())));
-                break;
-            case 'g':
-                List<String> gList = new ArrayList<>(greenCoordinates.keySet());
-                Collections.sort(gList);
-                boardView.setChosenPiece(gList.get((gList.indexOf(currentPiece) + 1)%(gList.size())));
-                break;
-            case 'y':
-                List<String> yList = new ArrayList<>(yellowCoordinates.keySet());
-                Collections.sort(yList);
-                boardView.setChosenPiece(yList.get((yList.indexOf(currentPiece) + 1)%(yList.size())));
-                break;
-            default:
-                switch (currentPlayer) {
-                    case 'b':
-                        boardView.setChosenPiece(blueCoordinates.entrySet().iterator().next().getKey());
-                        break;
-                    case 'r':
-                        boardView.setChosenPiece(redCoordinates.entrySet().iterator().next().getKey());
-                        break;
-                    case 'g':
-                        boardView.setChosenPiece(greenCoordinates.entrySet().iterator().next().getKey());
-                        break;
-                    case 'y':
-                        boardView.setChosenPiece(yellowCoordinates.entrySet().iterator().next().getKey());
-                        break;
-                }
-                break;
+        if (chosenPieceToMove == null) {
+            String nextPiece = null;
+            switch (currentPlayer) {
+                case 'b':
+                    nextPiece = blueCoordinates.entrySet().iterator().next().getKey();
+                    break;
+                case 'r':
+                    nextPiece = redCoordinates.entrySet().iterator().next().getKey();
+                    break;
+                case 'g':
+                    nextPiece = greenCoordinates.entrySet().iterator().next().getKey();
+                    break;
+                case 'y':
+                    nextPiece = yellowCoordinates.entrySet().iterator().next().getKey();
+                    break;
+            }
+            boardView.setChosenPiece(nextPiece);
+            chosenPieceToMove = nextPiece;
+        }else {
+            String currentPiece = chosenPieceToMove;
+            String nextPiece;
+            List<String> listCoordinates = new ArrayList<>();
 
+            switch (currentPiece.charAt(0)) {
+                case 'b':
+                    listCoordinates = new ArrayList<>(blueCoordinates.keySet());
+                    break;
+                case 'r':
+                    listCoordinates = new ArrayList<>(redCoordinates.keySet());
+                    break;
+                case 'g':
+                    listCoordinates = new ArrayList<>(greenCoordinates.keySet());
+                    break;
+                case 'y':
+                    listCoordinates = new ArrayList<>(yellowCoordinates.keySet());
+                    break;
+            }
+
+            Collections.sort(listCoordinates);
+            nextPiece = listCoordinates.get((listCoordinates.indexOf(currentPiece) + 1) % (listCoordinates.size()));
+            boardView.setChosenPiece(nextPiece);
+            chosenPieceToMove = nextPiece;
         }
     }
 
