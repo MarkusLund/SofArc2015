@@ -33,5 +33,6 @@
 
 
 
-    <string name="chooseButton_noChoice">You must roll the dice!</string>
+    <string name="chooseButton_needRoll">You must roll the dice!</string>
+    <string name="chooseButton_needChoice">You must choose a piece to move.</string>
 </resources>

@@ -319,7 +319,7 @@ public class GameActivity extends Activity{
     private void chooseButtonAction(){
         if (dice.getRoll() == 0){
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.chooseButton_noChoice)
+            builder.setTitle(R.string.chooseButton_needRoll)
                     .setCancelable(false)
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
@@ -328,7 +328,19 @@ public class GameActivity extends Activity{
                     });
             AlertDialog alert = builder.create();
             alert.show();
-        }else {
+        }else if (chosenPieceToMove == null){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.chooseButton_needChoice)
+                    .setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            //do things
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+        else {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
             builder.setTitle(R.string.end_turn_title);
