@@ -277,16 +277,19 @@ public class GameActivity extends Activity{
         if (boardView.getDiceView() == 0){boardView.rollDiceAction();}
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
         builder.setTitle(R.string.end_turn_title);
 //        builder.setMessage(R.string.end_turn_text);
+
         builder.setPositiveButton(R.string.end_turn_finish, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 movePiece();
             }
         });
-        builder.setNegativeButton(R.string.end_turn_undo, new DialogInterface.OnClickListener() {
+
+        builder.setNeutralButton(R.string.end_turn_undo, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                // do nothing
+                // should first make move, then undo it when this button is pressed
             }
         });
 
@@ -294,7 +297,6 @@ public class GameActivity extends Activity{
         WindowManager.LayoutParams wmlp = dialog.getWindow().getAttributes();
 
         wmlp.gravity = Gravity.TOP | Gravity.LEFT;
-        wmlp.x = (int) boardView.getBoardHeight();   //x position
         wmlp.y = (int) boardView.getBoardHeight();   //y position
 
         dialog.show();
