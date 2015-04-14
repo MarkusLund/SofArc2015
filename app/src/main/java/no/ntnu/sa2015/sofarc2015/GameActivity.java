@@ -46,6 +46,7 @@ public class GameActivity extends Activity{
     private int nofSoundFiles;
     private int[] soundFiles;
     private String chosenPieceToMove;
+    private boolean hasRolled;
 
 
     @Override
@@ -127,7 +128,10 @@ public class GameActivity extends Activity{
             @Override
             public void onClick(View v) {
                 //Updates dice.roll value to new int, and updates the BoardView with the new dice value
-                boardView.setDiceView(dice.rollDice());
+                if (!hasRolled){
+                    boardView.setDiceView(dice.rollDice());
+                    hasRolled = true;
+                }
             }
         });
 
@@ -350,7 +354,7 @@ public class GameActivity extends Activity{
                 public void onClick(DialogInterface dialog, int which) {
                     movePiece();
 
-                    endTurn();
+//                    endTurn();
                 }
             });
 
@@ -380,6 +384,15 @@ public class GameActivity extends Activity{
         //set chosen piece to null
         chosenPieceToMove = null;
         boardView.setChosenPiece(chosenPieceToMove);
+
+        //reset dice
+        dice.resetDice();
+        boardView.setDiceView(dice.getRoll());
+
+        //prevents player from rolling again
+        hasRolled = false;
+
+
 
     }
 
@@ -472,7 +485,7 @@ public class GameActivity extends Activity{
                         indexBlue = 4;
                         i--;
                     }
-                    Log.e("index", indexBlue+"");
+                    Log.e("index", indexBlue + "");
                     pieceCoordinates.put(chosenPieceToMove, bluePathCoordinates.get(indexBlue));
                 }
                 break;
@@ -493,7 +506,7 @@ public class GameActivity extends Activity{
                         indexRed = 4;
                         i--;
                     }
-                    Log.e("index", indexRed+"");
+                    Log.e("index", indexRed + "");
                     pieceCoordinates.put(chosenPieceToMove, redPathCoordinates.get(indexRed));
                 }
                 break;
@@ -514,7 +527,7 @@ public class GameActivity extends Activity{
                         indexGreen = 4;
                         i--;
                     }
-                    Log.e("index", indexGreen+"");
+                    Log.e("index", indexGreen + "");
                     pieceCoordinates.put(chosenPieceToMove, greenPathCoordinates.get(indexGreen));
                 }
                 break;
@@ -535,7 +548,7 @@ public class GameActivity extends Activity{
                         indexYellow = 4;
                         i--;
                     }
-                    Log.e("index", indexYellow+"");
+                    Log.e("index", indexYellow + "");
                     pieceCoordinates.put(chosenPieceToMove, yellowPathCoordinates.get(indexYellow));
                 }
                 break;

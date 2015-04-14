@@ -331,18 +331,10 @@ public class BoardView extends View{
         return path;
     }
 
-//    public String getChosenPiece() {
-//        return chosenPiece;
-//    }
-
     public void setChosenPiece(String choice) {
         this.chosenPiece = choice;
         this.invalidate(); //calls the onDraw method
     }
-
-//    public int getDiceView() {
-//        return diceRoll;
-//    }
 
     public void setDiceView(int diceRoll) {
         this.diceRoll = diceRoll;
@@ -353,8 +345,4 @@ public class BoardView extends View{
         this.pieceCoordinates = pieceCoordinates;
         this.invalidate();
     }
-
-//    public Map<String, Point> getPieceCoordinates() {
-//        return pieceCoordinates;
-//    }
 }
