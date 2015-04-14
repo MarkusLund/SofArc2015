@@ -331,9 +331,9 @@ public class BoardView extends View{
         return path;
     }
 
-    public String getChosenPiece() {
-        return chosenPiece;
-    }
+//    public String getChosenPiece() {
+//        return chosenPiece;
+//    }
 
     public void setChosenPiece(String choice) {
         this.chosenPiece = choice;
@@ -354,7 +354,7 @@ public class BoardView extends View{
         this.invalidate();
     }
 
-    public Map<String, Point> getPieceCoordinates() {
-        return pieceCoordinates;
-    }
+//    public Map<String, Point> getPieceCoordinates() {
+//        return pieceCoordinates;
+//    }
 }

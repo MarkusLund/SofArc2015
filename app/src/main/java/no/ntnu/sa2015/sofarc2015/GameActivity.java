@@ -384,19 +384,18 @@ public class GameActivity extends Activity{
     }
 
     private void exitHomeMove() {
-        Map<String, Point> pieceCoordinates = boardView.getPieceCoordinates();
         switch (currentPlayer) {
             case 'b':
-                pieceCoordinates.put(boardView.getChosenPiece(), new Point(1, 6));
+                pieceCoordinates.put(chosenPieceToMove, new Point(1, 6));
                 break;
             case 'r':
-                pieceCoordinates.put(boardView.getChosenPiece(), new Point(8, 1));
+                pieceCoordinates.put(chosenPieceToMove, new Point(8, 1));
                 break;
             case 'g':
-                pieceCoordinates.put(boardView.getChosenPiece(), new Point(13, 8));
+                pieceCoordinates.put(chosenPieceToMove, new Point(13, 8));
                 break;
             case 'y':
-                pieceCoordinates.put(boardView.getChosenPiece(), new Point(6, 13));
+                pieceCoordinates.put(chosenPieceToMove, new Point(6, 13));
                 break;
         }
         boardView.setPieceCoordinates(pieceCoordinates);
@@ -462,7 +461,6 @@ public class GameActivity extends Activity{
                 if (indexBlue + stepsLeft == 5){
                     pieceCoordinates.remove(chosenPieceToMove);
                     blueCoordinates.remove(chosenPieceToMove);
-                    boardView.setPieceCoordinates(pieceCoordinates);
                     Log.e("Winner", indexBlue +"  "+ stepsLeft);
                     break;
                 }
@@ -476,7 +474,6 @@ public class GameActivity extends Activity{
                     }
                     Log.e("index", indexBlue+"");
                     pieceCoordinates.put(chosenPieceToMove, bluePathCoordinates.get(indexBlue));
-                    boardView.setPieceCoordinates(pieceCoordinates);
                 }
                 break;
             case 'r':
@@ -485,7 +482,6 @@ public class GameActivity extends Activity{
                 if (indexRed + stepsLeft == 5){
                     pieceCoordinates.remove(chosenPieceToMove);
                     redCoordinates.remove(chosenPieceToMove);
-                    boardView.setPieceCoordinates(pieceCoordinates);
                     Log.e("Winner", indexRed +"  "+ stepsLeft);
                     break;
                 }
@@ -499,7 +495,6 @@ public class GameActivity extends Activity{
                     }
                     Log.e("index", indexRed+"");
                     pieceCoordinates.put(chosenPieceToMove, redPathCoordinates.get(indexRed));
-                    boardView.setPieceCoordinates(pieceCoordinates);
                 }
                 break;
             case 'g':
@@ -508,7 +503,6 @@ public class GameActivity extends Activity{
                 if (indexGreen + stepsLeft == 5){
                     pieceCoordinates.remove(chosenPieceToMove);
                     greenCoordinates.remove(chosenPieceToMove);
-                    boardView.setPieceCoordinates(pieceCoordinates);
                     Log.e("Winner", indexGreen +"  "+ stepsLeft);
                     break;
                 }
@@ -522,7 +516,6 @@ public class GameActivity extends Activity{
                     }
                     Log.e("index", indexGreen+"");
                     pieceCoordinates.put(chosenPieceToMove, greenPathCoordinates.get(indexGreen));
-                    boardView.setPieceCoordinates(pieceCoordinates);
                 }
                 break;
             case 'y':
@@ -531,7 +524,6 @@ public class GameActivity extends Activity{
                 if (indexYellow + stepsLeft == 5){
                     pieceCoordinates.remove(chosenPieceToMove);
                     yellowCoordinates.remove(chosenPieceToMove);
-                    boardView.setPieceCoordinates(pieceCoordinates);
                     Log.e("Winner", indexYellow +"  "+ stepsLeft);
                     break;
                 }
@@ -545,10 +537,10 @@ public class GameActivity extends Activity{
                     }
                     Log.e("index", indexYellow+"");
                     pieceCoordinates.put(chosenPieceToMove, yellowPathCoordinates.get(indexYellow));
-                    boardView.setPieceCoordinates(pieceCoordinates);
                 }
                 break;
         }
+        boardView.setPieceCoordinates(pieceCoordinates);
     }
 
     private int getPathIndex(Point point){
