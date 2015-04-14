@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.util.Linkify;
 import android.util.Log;
@@ -27,6 +28,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 
 public class GameActivity extends Activity{
@@ -44,6 +46,8 @@ public class GameActivity extends Activity{
 
     private char currentPlayer;
     private Map<String, Point> movedPieceCoordinates;
+    private int nofSoundFiles;
+    private int[] soundFiles;
 
 
     @Override
@@ -61,6 +65,8 @@ public class GameActivity extends Activity{
 
         board = readFile("map.txt");
         this.dice = new Dice();
+
+        generateSoundFiles();
 
         getScreenSizes();
 
@@ -127,6 +133,8 @@ public class GameActivity extends Activity{
             }
         });
 
+
+
         LinearLayout horizontalLayout = new LinearLayout(this);
         horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(screenWidth/2, LinearLayout.LayoutParams.MATCH_PARENT, 1);
@@ -143,6 +151,24 @@ public class GameActivity extends Activity{
         LinearLayout.LayoutParams helpLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
         linLayout.addView(helpButton, helpLayout);
 
+    }
+
+    private void playDontGetMadBroSound() {
+        MediaPlayer mp;
+        mp = MediaPlayer.create(this, soundFiles[new Random().nextInt(nofSoundFiles)]);
+        mp.start();
+    }
+
+    private void generateSoundFiles(){
+        nofSoundFiles = 7;
+        soundFiles = new int[nofSoundFiles];
+        soundFiles[0] = R.raw.danish;
+        soundFiles[1] = R.raw.english;
+        soundFiles[2] = R.raw.italian;
+        soundFiles[3] = R.raw.japanese;
+        soundFiles[4] = R.raw.norsk;
+        soundFiles[5] = R.raw.norwegian;
+        soundFiles[6] = R.raw.swedish;
     }
 
 
