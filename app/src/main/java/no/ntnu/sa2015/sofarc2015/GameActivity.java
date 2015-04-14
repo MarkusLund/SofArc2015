@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -17,7 +16,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,7 +35,6 @@ public class GameActivity extends Activity{
     private HelpView helpView;
     private ArrayList<List<String>> board = null;
     private int screenWidth, screenHeight;
-    private Map<String, Point> pieceCoordinates;
     private List<String> pieceNames;
     private Map<String, Point> blueCoordinates, redCoordinates, greenCoordinates, yellowCoordinates;
     private List<Point> pathCoordinates;
@@ -45,7 +42,7 @@ public class GameActivity extends Activity{
     private Dice dice;
 
     private char currentPlayer;
-    private Map<String, Point> movedPieceCoordinates;
+    private Map<String, Point> pieceCoordinates;
     private int nofSoundFiles;
     private int[] soundFiles;
     private String chosenPieceToMove;
@@ -71,8 +68,8 @@ public class GameActivity extends Activity{
 
         getScreenSizes();
 
-        pieceCoordinates = new HashMap<>();
-        generateStartPositions();
+        //Creating the initial hashmap with all the piece coordinates piece : Point
+        pieceCoordinates = generateStartPositions();
 
         pieceNames = Arrays.asList("b1", "b2", "b3", "b4", "r1", "r2", "r3", "r4", "g1", "g2", "g3", "g4", "y1", "y2", "y3", "y4");
         blueCoordinates = new HashMap<>();
@@ -223,31 +220,35 @@ public class GameActivity extends Activity{
         screenHeight = size.y;
     }
 
-    private void generateStartPositions() {
+    private HashMap<String, Point> generateStartPositions() {
+
+        HashMap<String, Point> apieceCoordinates = new HashMap<>();
 
         //      Blue start positions
-        pieceCoordinates.put("b1", new Point(2,2));
-        pieceCoordinates.put("b2", new Point(2,3));
-        pieceCoordinates.put("b3", new Point(3,2));
-        pieceCoordinates.put("b4", new Point(3,3));
+        apieceCoordinates.put("b1", new Point(2,2));
+        apieceCoordinates.put("b2", new Point(2,3));
+        apieceCoordinates.put("b3", new Point(3,2));
+        apieceCoordinates.put("b4", new Point(3,3));
 
         //      Green start positions
-        pieceCoordinates.put("g1", new Point(11,11));
-        pieceCoordinates.put("g2", new Point(11,12));
-        pieceCoordinates.put("g3", new Point(12,11));
-        pieceCoordinates.put("g4", new Point(12,12));
+        apieceCoordinates.put("g1", new Point(11,11));
+        apieceCoordinates.put("g2", new Point(11,12));
+        apieceCoordinates.put("g3", new Point(12,11));
+        apieceCoordinates.put("g4", new Point(12,12));
 
         //     Red start positions
-        pieceCoordinates.put("r1", new Point(11,2));
-        pieceCoordinates.put("r2", new Point(11,3));
-        pieceCoordinates.put("r3", new Point(12,2));
-        pieceCoordinates.put("r4", new Point(12,3));
+        apieceCoordinates.put("r1", new Point(11,2));
+        apieceCoordinates.put("r2", new Point(11,3));
+        apieceCoordinates.put("r3", new Point(12,2));
+        apieceCoordinates.put("r4", new Point(12,3));
 
         //      Yellow start positions
-        pieceCoordinates.put("y1", new Point(2,11));
-        pieceCoordinates.put("y2", new Point(2,12));
-        pieceCoordinates.put("y3", new Point(3,11));
-        pieceCoordinates.put("y4", new Point(3,12));
+        apieceCoordinates.put("y1", new Point(2,11));
+        apieceCoordinates.put("y2", new Point(2,12));
+        apieceCoordinates.put("y3", new Point(3,11));
+        apieceCoordinates.put("y4", new Point(3,12));
+
+        return apieceCoordinates;
     }
 
     private void addColorCoordinates() {
@@ -344,7 +345,6 @@ public class GameActivity extends Activity{
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
             builder.setTitle(R.string.end_turn_title);
-//        builder.setMessage(R.string.end_turn_text);
 
             builder.setPositiveButton(R.string.end_turn_finish, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
@@ -370,88 +370,81 @@ public class GameActivity extends Activity{
 
     }
 
-    private void startMove() {
-        Map<String, Point> pieceCoordinates = boardView.getPieceCoordinates();
-        switch (currentPlayer) {
-            case 'b':
-                pieceCoordinates.put(boardView.getChosenPiece(), new Point(1, 6));
-                boardView.setPieceCoordinates(pieceCoordinates);
-                break;
-            case 'r':
-                pieceCoordinates.put(boardView.getChosenPiece(), new Point(8, 1));
-                boardView.setPieceCoordinates(pieceCoordinates);
-                break;
-            case 'g':
-                pieceCoordinates.put(boardView.getChosenPiece(), new Point(13, 8));
-                boardView.setPieceCoordinates(pieceCoordinates);
-                break;
-            case 'y':
-                pieceCoordinates.put(boardView.getChosenPiece(), new Point(6, 13));
-                boardView.setPieceCoordinates(pieceCoordinates);
-                break;
-        }
 
-    }
 
     private void movePiece(){
 
-        movedPieceCoordinates = boardView.getPieceCoordinates();
         int diceRoll = dice.getRoll();
         String chosenPiece = boardView.getChosenPiece();
-        int oldPathIndexOfPiece = getPathIndex(movedPieceCoordinates.get(chosenPiece));
+        int oldPathIndexOfPiece = getPathIndex(pieceCoordinates.get(chosenPiece));
 
-        if (pathCoordinates.contains(movedPieceCoordinates.get(chosenPiece))){ // if the piece is on the Path
+        if (pathCoordinates.contains(pieceCoordinates.get(chosenPiece))){ // if the piece is on the Path
             for (int i = 0; i < diceRoll; i++) {
                 oldPathIndexOfPiece++;
                 if (oldPathIndexOfPiece == 52 && chosenPiece.charAt(0) == 'b') { // if at blue finish, enter blue safezone
-                    movedPieceCoordinates.put(chosenPiece, bluePathCoordinates.get(0));
-                    boardView.setPieceCoordinates(movedPieceCoordinates);
+                    pieceCoordinates.put(chosenPiece, bluePathCoordinates.get(0));
                     break;
                 }
                 if (oldPathIndexOfPiece == 13 && chosenPiece.charAt(0) == 'r') {
-                    movedPieceCoordinates.put(chosenPiece, redPathCoordinates.get(0));
-                    boardView.setPieceCoordinates(movedPieceCoordinates);
+                    pieceCoordinates.put(chosenPiece, redPathCoordinates.get(0));
                     break;
                 }
                 if (oldPathIndexOfPiece == 26 && chosenPiece.charAt(0) == 'g') {
-                    movedPieceCoordinates.put(chosenPiece, greenPathCoordinates.get(0));
-                    boardView.setPieceCoordinates(movedPieceCoordinates);
+                    pieceCoordinates.put(chosenPiece, greenPathCoordinates.get(0));
                     break;
                 }
                 if (oldPathIndexOfPiece == 39 && chosenPiece.charAt(0) == 'y') {
-                    movedPieceCoordinates.put(chosenPiece, yellowPathCoordinates.get(0));
-                    boardView.setPieceCoordinates(movedPieceCoordinates);
+                    pieceCoordinates.put(chosenPiece, yellowPathCoordinates.get(0));
                     break;
                 }
                 else {
-                    movedPieceCoordinates.put(chosenPiece, pathCoordinates.get(oldPathIndexOfPiece%52));
-                    boardView.setPieceCoordinates(movedPieceCoordinates);
+                    pieceCoordinates.put(chosenPiece, pathCoordinates.get(oldPathIndexOfPiece%52));
                 }
+                boardView.setPieceCoordinates(pieceCoordinates);
             }
         }
-        else if (bluePathCoordinates.contains(movedPieceCoordinates.get(chosenPiece))){
-            movedPieceCoordinates.put(chosenPiece, bluePathCoordinates.get(1));
-            boardView.setPieceCoordinates(movedPieceCoordinates);
+        else if (bluePathCoordinates.contains(pieceCoordinates.get(chosenPiece))){
+            pieceCoordinates.put(chosenPiece, bluePathCoordinates.get(1));
         }
-        else if (redPathCoordinates.contains(movedPieceCoordinates.get(chosenPiece))){
-            movedPieceCoordinates.put(chosenPiece, redPathCoordinates.get(1));
-            boardView.setPieceCoordinates(movedPieceCoordinates);
+        else if (redPathCoordinates.contains(pieceCoordinates.get(chosenPiece))){
+            pieceCoordinates.put(chosenPiece, redPathCoordinates.get(1));
         }
-        else if (greenPathCoordinates.contains(movedPieceCoordinates.get(chosenPiece))){
-            movedPieceCoordinates.put(chosenPiece, greenPathCoordinates.get(1));
-            boardView.setPieceCoordinates(movedPieceCoordinates);
+        else if (greenPathCoordinates.contains(pieceCoordinates.get(chosenPiece))){
+            pieceCoordinates.put(chosenPiece, greenPathCoordinates.get(1));
         }
-        else if (yellowPathCoordinates.contains(movedPieceCoordinates.get(chosenPiece))){
-            movedPieceCoordinates.put(chosenPiece, yellowPathCoordinates.get(1));
-            boardView.setPieceCoordinates(movedPieceCoordinates);
+        else if (yellowPathCoordinates.contains(pieceCoordinates.get(chosenPiece))){
+            pieceCoordinates.put(chosenPiece, yellowPathCoordinates.get(1));
         }
-
         else{// if in home area, move to start
             startMove();
         }
+        //Updates the board with new positions
+        boardView.setPieceCoordinates(pieceCoordinates);
 
 
    }
+
+    private void startMove() {
+        switch (currentPlayer) {
+            case 'b':
+                pieceCoordinates.put(boardView.getChosenPiece(), new Point(1, 6));
+                break;
+            case 'r':
+                pieceCoordinates.put(boardView.getChosenPiece(), new Point(8, 1));
+                break;
+            case 'g':
+                pieceCoordinates.put(boardView.getChosenPiece(), new Point(13, 8));
+                break;
+            case 'y':
+                pieceCoordinates.put(boardView.getChosenPiece(), new Point(6, 13));
+                break;
+        }
+
+        //Updates the board with new positions
+        boardView.setPieceCoordinates(pieceCoordinates);
+
+
+    }
 
     private void nextFinishCoord(Point oldCoordinate, int stepsLeft) {
         switch (currentPlayer) {
