@@ -32,6 +32,7 @@ import java.util.Map;
 public class GameActivity extends Activity{
 
     private BoardView boardView;
+    private HelpView helpView;
     private ArrayList<List<String>> board = null;
     private int screenWidth, screenHeight;
     private Map<String, Point> pieceCoordinates;
@@ -89,6 +90,10 @@ public class GameActivity extends Activity{
         Button helpButton = new Button(this);
         helpButton.setText("Help");
         helpButton.setTextSize(20);
+
+        helpView = new HelpView(this, screenWidth, screenHeight);
+
+
         Button changeButton = new Button(this);
         changeButton.setText("Change");
         changeButton.setTextSize(20);
@@ -98,7 +103,7 @@ public class GameActivity extends Activity{
 
         helpButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                showHelp();
+                helpView.show();
             }
         });
 
@@ -432,31 +437,4 @@ public class GameActivity extends Activity{
         currentPlayer = player.get((int) (Math.random()*4));
 
     }
-
-    private void showHelp() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.help_title);
-
-        LinearLayout linLayout = new LinearLayout(this);
-        linLayout.setPadding(screenWidth/30, screenHeight/50, screenWidth/30, 0);
-
-        TextView helpText = new TextView(this);
-        helpText.setText(R.string.help_text);
-        Linkify.addLinks(helpText, Linkify.WEB_URLS);
-        linLayout.addView(helpText);
-
-        builder.setView(linLayout);
-
-
-        builder.setNegativeButton(R.string.help_close, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // do nothing
-            }
-        });
-
-        AlertDialog dialog = builder.create();
-
-        dialog.show();
-    }
-
 }
