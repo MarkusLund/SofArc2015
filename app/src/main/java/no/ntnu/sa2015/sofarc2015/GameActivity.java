@@ -1,15 +1,19 @@
 package no.ntnu.sa2015.sofarc2015;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -160,6 +164,7 @@ public class GameActivity extends Activity{
         }
         return board;
     }
+
     private void getScreenSizes() {
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -264,14 +269,40 @@ public class GameActivity extends Activity{
     }
 
     private void choosePieceAction(){
-        if (boardView.getDiceView() == 0){rollDiceAction();}
 
-        Map<String, Point> movedPieceCoordinates = boardView.getPieceCoordinates();
-        movedPieceCoordinates.put(boardView.getChosenPiece(), nextCoordinates(movedPieceCoordinates.get(boardView.getChosenPiece())));
-        boardView.setPieceCoordinates(movedPieceCoordinates);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.end_turn_title);
+//        builder.setMessage(R.string.end_turn_text);
+        builder.setPositiveButton(R.string.end_turn_finish, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                if (boardView.getDiceView() == 0) {
+                    rollDiceAction();
+                }
+
+                Map<String, Point> movedPieceCoordinates = boardView.getPieceCoordinates();
+                movedPieceCoordinates.put(boardView.getChosenPiece(), nextCoordinates());
+                boardView.setPieceCoordinates(movedPieceCoordinates);
+            }
+        });
+        builder.setNegativeButton(R.string.end_turn_undo, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // do nothing
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        WindowManager.LayoutParams wmlp = dialog.getWindow().getAttributes();
+
+        wmlp.gravity = Gravity.TOP | Gravity.LEFT;
+        wmlp.x = (int) boardView.getBoardHeight();   //x position
+        wmlp.y = (int) boardView.getBoardHeight();   //y position
+
+        dialog.show();
+
+
     }
 
-    private Point nextCoordinates(Point oldCoordinate) {
+    private Point nextCoordinates() {
         Point newCoordinates = null;
         int diceCount = boardView.getDiceView();
         Map<String, Point> pieceCoordinates = boardView.getPieceCoordinates();
