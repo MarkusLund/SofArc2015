@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
+import android.text.util.Linkify;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
@@ -14,6 +16,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -93,6 +99,7 @@ public class GameActivity extends Activity{
 
         helpButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                showHelp();
             }
         });
 
@@ -375,6 +382,30 @@ public class GameActivity extends Activity{
 
     }
 
+    private void showHelp() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.help_title);
 
+        LinearLayout linLayout = new LinearLayout(this);
+        linLayout.setPadding(screenWidth/30, screenHeight/50, screenWidth/30, 0);
+
+        TextView helpText = new TextView(this);
+        helpText.setText(R.string.help_text);
+        Linkify.addLinks(helpText, Linkify.WEB_URLS);
+        linLayout.addView(helpText);
+
+        builder.setView(linLayout);
+
+
+        builder.setNegativeButton(R.string.help_close, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // do nothing
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+    }
 
 }

@@ -9,4 +9,28 @@
     <string name="end_turn_text">Are you sure you wish to end your turn?</string>
     <string name="end_turn_undo">CHANGE PIECE</string>
     <string name="end_turn_finish">END TURN</string>
+    <string name="help_title">HELP</string>
+    <string name="help_close">Close</string>
+    <string name="help_text">
+    &#8226; Highest roll begins game\n
+    &#8226; Clockwise direction\n
+    &#8226; If no pieces are ingame and no 6 is rolled, you skip turn\n
+    &#8226; To enter the game you need to roll a 6\n
+    &#8226; You must always move a piece the amount shown bye dice\n
+    &#8226; If a 6 is rolled you may move 6 or enter another piece, and roll again\n
+    &#8226; Upon the third 6 rolled in a row, you forfeit your turn\n
+    &#8226; You can not land on your own piece, ERGO NO STACKING\n
+    &#8226; If you land on another player piece, you send the piece back to start\n \n
+    Official rules from:\n www.wikipedia.org/wiki/Ludo_(board_game)
+    </string>
+
+
+
+
+
+
+
+
+
+
 </resources>
