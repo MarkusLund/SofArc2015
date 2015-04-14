@@ -45,7 +45,6 @@ public class GameActivity extends Activity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
 
         // creating LinearLayout
@@ -78,14 +77,17 @@ public class GameActivity extends Activity{
         linLayout.addView(boardView, linLayoutParam);
 
 
-        Button rollButton = new Button(this);
-        rollButton.setText("Roll");
+        Button helpButton = new Button(this);
+        helpButton.setText("Help");
+        helpButton.setTextSize(20);
         Button changeButton = new Button(this);
         changeButton.setText("Change");
+        changeButton.setTextSize(20);
         Button chooseButton = new Button(this);
         chooseButton.setText("Choose");
+        chooseButton.setTextSize(20);
 
-        rollButton.setOnClickListener(new View.OnClickListener() {
+        helpButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 rollDiceAction();
             }
@@ -105,16 +107,19 @@ public class GameActivity extends Activity{
 
         LinearLayout horizontalLayout = new LinearLayout(this);
         horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(screenWidth/3, LinearLayout.LayoutParams.MATCH_PARENT, 1);
+        LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(screenWidth/2, LinearLayout.LayoutParams.MATCH_PARENT, 1);
 
 
 
-        horizontalLayout.addView(rollButton, buttonParams);
         horizontalLayout.addView(changeButton, buttonParams);
         horizontalLayout.addView(chooseButton, buttonParams);
 
-        LinearLayout.LayoutParams buttonLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        LinearLayout.LayoutParams buttonLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) ((screenHeight-boardView.getBoardHeight())*0.40), 1);
         linLayout.addView(horizontalLayout, buttonLayout);
+
+
+        LinearLayout.LayoutParams helpLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
+        linLayout.addView(helpButton, helpLayout);
 
     }
 
@@ -269,6 +274,7 @@ public class GameActivity extends Activity{
     }
 
     private void choosePieceAction(){
+        if (boardView.getDiceView() == 0){boardView.rollDiceAction();}
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.end_turn_title);

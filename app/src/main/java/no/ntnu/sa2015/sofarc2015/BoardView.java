@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -37,6 +38,16 @@ public class BoardView extends View{
         this.tileWidth = this.screenWidth/board.size();
         this.pieceCoordinates = pieceCoordinates;
 
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        rollDiceAction();
+        return super.onTouchEvent(event);
+    }
+    public void rollDiceAction() {
+        int roll = (int) (Math.random()*6+1);
+        setDiceView(roll);
     }
 
     @Override
