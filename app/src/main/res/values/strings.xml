@@ -33,4 +33,5 @@
 
 
 
+    <string name="chooseButton_noChoice">You must roll the dice!</string>
 </resources>

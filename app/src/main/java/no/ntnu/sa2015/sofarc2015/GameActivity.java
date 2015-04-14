@@ -286,33 +286,42 @@ public class GameActivity extends Activity{
 
     private void chooseButtonAction(){
         if (dice.getRoll() == 0){
-            boardView.setDiceView(dice.rollDice());
-        }
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.chooseButton_noChoice)
+                    .setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            //do things
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle(R.string.end_turn_title);
+            builder.setTitle(R.string.end_turn_title);
 //        builder.setMessage(R.string.end_turn_text);
 
-        builder.setPositiveButton(R.string.end_turn_finish, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                movePiece();
-            }
-        });
+            builder.setPositiveButton(R.string.end_turn_finish, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    movePiece();
+                }
+            });
 
-        builder.setNeutralButton(R.string.end_turn_undo, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // should first make move, then undo it when this button is pressed
-            }
-        });
+            builder.setNeutralButton(R.string.end_turn_undo, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    // should first make move, then undo it when this button is pressed
+                }
+            });
 
-        AlertDialog dialog = builder.create();
-        WindowManager.LayoutParams wmlp = dialog.getWindow().getAttributes();
+            AlertDialog dialog = builder.create();
+            WindowManager.LayoutParams wmlp = dialog.getWindow().getAttributes();
 
-        wmlp.gravity = Gravity.TOP | Gravity.LEFT;
-        wmlp.y = (int) boardView.getBoardHeight();   //y position
+            wmlp.gravity = Gravity.TOP | Gravity.LEFT;
+            wmlp.y = (int) boardView.getBoardHeight();   //y position
 
-        dialog.show();
+            dialog.show();
+        }
 
 
     }
@@ -376,33 +385,10 @@ public class GameActivity extends Activity{
                 }
             }
         }
-        else if (bluePathCoordinates.contains(movedPieceCoordinates.get(chosenPiece))){
-            movedPieceCoordinates.put(chosenPiece, bluePathCoordinates.get(1));
-            boardView.setPieceCoordinates(movedPieceCoordinates);
-        }
-        else if (redPathCoordinates.contains(movedPieceCoordinates.get(chosenPiece))){
-            movedPieceCoordinates.put(chosenPiece, redPathCoordinates.get(1));
-            boardView.setPieceCoordinates(movedPieceCoordinates);
-        }
-        else if (greenPathCoordinates.contains(movedPieceCoordinates.get(chosenPiece))){
-            movedPieceCoordinates.put(chosenPiece, greenPathCoordinates.get(1));
-            boardView.setPieceCoordinates(movedPieceCoordinates);
-        }
-        else if (yellowPathCoordinates.contains(movedPieceCoordinates.get(chosenPiece))){
-            movedPieceCoordinates.put(chosenPiece, yellowPathCoordinates.get(1));
-            boardView.setPieceCoordinates(movedPieceCoordinates);
-        }
-
-        else{// if in home area, move to start
-            startMove();
-        }
 
 
    }
 
-    private Point nextFinishCoord(Point oldCoordinate, int stepsLeft) {
-        return new Point (4, 7);
-    }
 
     private int getPathIndex(Point point){
         return pathCoordinates.lastIndexOf(point);
