@@ -5,8 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -47,7 +45,7 @@ public class BoardView extends View{
 
     @Override
     public void onDraw(Canvas canvas) {
-        Log.e("BoardView", "onDraw called");
+        //Log.e("BoardView", "onDraw called");
         drawBoard(canvas);
         drawPieces(canvas);
         drawDice(canvas, this.diceRoll);
@@ -117,7 +115,7 @@ public class BoardView extends View{
 
 
     private void drawPieces(Canvas canvas) {
-        Log.e("BoardView", "drawPieces");
+        //Log.e("BoardView", "drawPieces");
         for (Map.Entry<String, Point> entry : pieceCoordinates.entrySet())
         {
             drawPiece(canvas, entry.getKey());
@@ -150,7 +148,7 @@ public class BoardView extends View{
     }
 
     private void drawBoard(Canvas canvas) {
-        Log.e("BoardView", "drawBoard");
+        //Log.e("BoardView", "drawBoard");
         for (int i = 0; i < board.size(); i++) {
             for (int j = 0; j < board.get(0).size(); j++) {
                 String tile = board.get(i).get(j);
@@ -284,7 +282,7 @@ public class BoardView extends View{
     public List<Point> generateYellowFinishPath() {
         List<Point> path = new ArrayList<>();
 
-        path.add(new Point(6,13)); //yellow start
+        //path.add(new Point(6,13)); //yellow start
         path.add(new Point(7,13));
         path.add(new Point(7,12));
         path.add(new Point(7,11));
@@ -297,7 +295,7 @@ public class BoardView extends View{
     public List<Point> generateBlueFinishPath() {
         List<Point> path = new ArrayList<>();
 
-        path.add(new Point(1,6)); //blue start
+        //path.add(new Point(1,6)); //blue start
         path.add(new Point(1,7));
         path.add(new Point(2,7));
         path.add(new Point(3,7));
@@ -310,7 +308,7 @@ public class BoardView extends View{
     public List<Point> generateRedFinishPath() {
         List<Point> path = new ArrayList<>();
 
-        path.add(new Point(8,1)); //red start
+        //path.add(new Point(8,1)); //red start
         path.add(new Point(7,1));
         path.add(new Point(7,2));
         path.add(new Point(7,3));
@@ -323,7 +321,7 @@ public class BoardView extends View{
     public List<Point> generateGreenFinishPath() {
         List<Point> path = new ArrayList<>();
 
-        path.add(new Point(13,8)); //green start
+        //path.add(new Point(13,8)); //green start
         path.add(new Point(13,7));
         path.add(new Point(12,7));
         path.add(new Point(11,7));

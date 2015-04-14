@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.text.util.Linkify;
 import android.view.Display;
 import android.view.Gravity;
@@ -16,9 +15,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -39,11 +35,9 @@ public class GameActivity extends Activity{
     private int screenWidth, screenHeight;
     private Map<String, Point> pieceCoordinates;
     private List<String> pieceNames;
-    private Map<String, Point> blueCoordinates;
-    private Map<String, Point> redCoordinates;
-    private Map<String, Point> greenCoordinates;
-    private Map<String, Point> yellowCoordinates;
+    private Map<String, Point> blueCoordinates, redCoordinates, greenCoordinates, yellowCoordinates;
     private List<Point> pathCoordinates;
+    private List<Point> bluePathCoordinates, redPathCoordinates, greenPathCoordinates, yellowPathCoordinates;
     private Dice dice;
 
     private char currentPlayer;
@@ -81,6 +75,10 @@ public class GameActivity extends Activity{
         boardView = new BoardView(this, board, screenWidth, screenHeight, (HashMap<String, Point>) pieceCoordinates);
         boardView.setBackgroundColor(Color.WHITE);
         pathCoordinates = boardView.generatePath();
+        bluePathCoordinates = boardView.generateBlueFinishPath();
+        redPathCoordinates = boardView.generateRedFinishPath();
+        greenPathCoordinates = boardView.generateGreenFinishPath();
+        yellowPathCoordinates = boardView.generateYellowFinishPath();
 
 
         linLayoutParam.height = (int) boardView.getBoardHeight();
@@ -347,29 +345,69 @@ public class GameActivity extends Activity{
         movedPieceCoordinates = boardView.getPieceCoordinates();
         int diceRoll = dice.getRoll();
         String chosenPiece = boardView.getChosenPiece();
-        int oldPathIndexOfPiece = getPathIndex(movedPieceCoordinates.get(boardView.getChosenPiece()));
-        if (oldPathIndexOfPiece == -1){
-            startMove();
-        }
-        else {
+        int oldPathIndexOfPiece = getPathIndex(movedPieceCoordinates.get(chosenPiece));
+
+        if (pathCoordinates.contains(movedPieceCoordinates.get(chosenPiece))){ // if the piece is on the Path
             for (int i = 0; i < diceRoll; i++) {
-                    oldPathIndexOfPiece++;
-                    movedPieceCoordinates.put(chosenPiece, pathCoordinates.get(oldPathIndexOfPiece));
+                oldPathIndexOfPiece++;
+                if (oldPathIndexOfPiece == 52 && chosenPiece.charAt(0) == 'b') { // if at blue finish, enter blue safezone
+                    movedPieceCoordinates.put(chosenPiece, bluePathCoordinates.get(0));
                     boardView.setPieceCoordinates(movedPieceCoordinates);
+                    break;
+                }
+                if (oldPathIndexOfPiece == 13 && chosenPiece.charAt(0) == 'r') {
+                    movedPieceCoordinates.put(chosenPiece, redPathCoordinates.get(0));
+                    boardView.setPieceCoordinates(movedPieceCoordinates);
+                    break;
+                }
+                if (oldPathIndexOfPiece == 26 && chosenPiece.charAt(0) == 'g') {
+                    movedPieceCoordinates.put(chosenPiece, greenPathCoordinates.get(0));
+                    boardView.setPieceCoordinates(movedPieceCoordinates);
+                    break;
+                }
+                if (oldPathIndexOfPiece == 39 && chosenPiece.charAt(0) == 'y') {
+                    movedPieceCoordinates.put(chosenPiece, yellowPathCoordinates.get(0));
+                    boardView.setPieceCoordinates(movedPieceCoordinates);
+                    break;
+                }
+                else {
+                    movedPieceCoordinates.put(chosenPiece, pathCoordinates.get(oldPathIndexOfPiece%52));
+                    boardView.setPieceCoordinates(movedPieceCoordinates);
+                }
             }
+        }
+        else if (bluePathCoordinates.contains(movedPieceCoordinates.get(chosenPiece))){
+            movedPieceCoordinates.put(chosenPiece, bluePathCoordinates.get(1));
+            boardView.setPieceCoordinates(movedPieceCoordinates);
+        }
+        else if (redPathCoordinates.contains(movedPieceCoordinates.get(chosenPiece))){
+            movedPieceCoordinates.put(chosenPiece, redPathCoordinates.get(1));
+            boardView.setPieceCoordinates(movedPieceCoordinates);
+        }
+        else if (greenPathCoordinates.contains(movedPieceCoordinates.get(chosenPiece))){
+            movedPieceCoordinates.put(chosenPiece, greenPathCoordinates.get(1));
+            boardView.setPieceCoordinates(movedPieceCoordinates);
+        }
+        else if (yellowPathCoordinates.contains(movedPieceCoordinates.get(chosenPiece))){
+            movedPieceCoordinates.put(chosenPiece, yellowPathCoordinates.get(1));
+            boardView.setPieceCoordinates(movedPieceCoordinates);
+        }
+
+        else{// if in home area, move to start
+            startMove();
         }
 
 
    }
 
+    private Point nextFinishCoord(Point oldCoordinate, int stepsLeft) {
+        return new Point (4, 7);
+    }
 
     private int getPathIndex(Point point){
         return pathCoordinates.lastIndexOf(point);
     }
 
-    private Point nextFinishCoord(Point oldCoordinate, int stepsLeft) {
-        return new Point (7, 13);
-    }
 
     private void switchBetweenColors() {
         ArrayList<Character> player = new ArrayList<Character>();
