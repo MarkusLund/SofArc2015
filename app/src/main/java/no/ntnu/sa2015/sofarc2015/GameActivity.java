@@ -401,6 +401,10 @@ public class GameActivity extends Activity{
    }
 
     private Point nextFinishCoord(Point oldCoordinate, int stepsLeft) {
+        switch (currentPlayer) {
+            case 'b':
+
+        }
         return new Point (4, 7);
     }
 
