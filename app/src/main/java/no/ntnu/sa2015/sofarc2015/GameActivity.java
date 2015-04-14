@@ -133,13 +133,9 @@ public class GameActivity extends Activity{
             }
         });
 
-
-
         LinearLayout horizontalLayout = new LinearLayout(this);
         horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(screenWidth/2, LinearLayout.LayoutParams.MATCH_PARENT, 1);
-
-
 
         horizontalLayout.addView(changeButton, buttonParams);
         horizontalLayout.addView(chooseButton, buttonParams);
