@@ -281,13 +281,7 @@ public class GameActivity extends Activity{
 //        builder.setMessage(R.string.end_turn_text);
         builder.setPositiveButton(R.string.end_turn_finish, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                if (boardView.getDiceView() == 0) {
-                    rollDiceAction();
-                }
-
-                Map<String, Point> movedPieceCoordinates = boardView.getPieceCoordinates();
-                movedPieceCoordinates.put(boardView.getChosenPiece(), nextCoordinates());
-                boardView.setPieceCoordinates(movedPieceCoordinates);
+                movePiece();
             }
         });
         builder.setNegativeButton(R.string.end_turn_undo, new DialogInterface.OnClickListener() {
