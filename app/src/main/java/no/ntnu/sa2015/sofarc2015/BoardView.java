@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -193,7 +192,7 @@ public class BoardView extends View{
         List<Point> path = new ArrayList<>();
 
         path.add(new Point(0,6));
-        path.add(new Point(1,6)); //blue start
+        path.add(new Point(1,6)); //blue start, index 1
         path.add(new Point(2,6));
         path.add(new Point(3,6));
         path.add(new Point(4,6));
@@ -206,10 +205,10 @@ public class BoardView extends View{
         path.add(new Point(6,1));
         path.add(new Point(6,0));
 
-        path.add(new Point(7,0)); //top middle
+        path.add(new Point(7,0)); //top middle, index 12
 
         path.add(new Point(8,0));
-        path.add(new Point(8,1)); //red start
+        path.add(new Point(8,1)); //red start, index 14
         path.add(new Point(8,2));
         path.add(new Point(8,3));
         path.add(new Point(8,4));
@@ -222,10 +221,10 @@ public class BoardView extends View{
         path.add(new Point(13,6));
         path.add(new Point(14,6));
 
-        path.add(new Point(14,7)); //right middle
+        path.add(new Point(14,7)); //right middle, index 25
 
         path.add(new Point(14,8));
-        path.add(new Point(13,8)); //green start
+        path.add(new Point(13,8)); //green start, index 27
         path.add(new Point(12,8));
         path.add(new Point(11,8));
         path.add(new Point(10,8));
@@ -238,10 +237,10 @@ public class BoardView extends View{
         path.add(new Point(8,13));
         path.add(new Point(8,14));
 
-        path.add(new Point(7,14)); //bottom middle
+        path.add(new Point(7,14)); //bottom middle, index 38
 
         path.add(new Point(6,14));
-        path.add(new Point(6,13)); //yellow start
+        path.add(new Point(6,13)); //yellow start, index 40
         path.add(new Point(6,12));
         path.add(new Point(6,11));
         path.add(new Point(6,10));
@@ -254,7 +253,7 @@ public class BoardView extends View{
         path.add(new Point(1,8));
         path.add(new Point(0,8));
 
-        path.add(new Point(0,7)); //left middle
+        path.add(new Point(0,7)); //left middle, index 51
 
         return path;
     }

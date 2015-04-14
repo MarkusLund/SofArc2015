@@ -1,29 +1,24 @@
 package no.ntnu.sa2015.sofarc2015;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +30,14 @@ public class GameActivity extends Activity{
     private ArrayList<List<String>> board = null;
     private int screenWidth, screenHeight;
     private Map<String, Point> pieceCoordinates;
+    private List<String> pieceNames;
+    private Map<String, Point> blueCoordinates;
+    private Map<String, Point> redCoordinates;
+    private Map<String, Point> greenCoordinates;
+    private Map<String, Point> yellowCoordinates;
+
+    private char currentPlayer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,14 @@ public class GameActivity extends Activity{
         getScreenSizes();
         pieceCoordinates = new HashMap<>();
         generateStartPositions();
+
+        pieceNames = Arrays.asList("b1", "b2", "b3", "b4", "r1", "r2", "r3", "r4", "g1", "g2", "g3", "g4", "y1", "y2", "y3", "y4");
+        blueCoordinates = new HashMap<>();
+        redCoordinates = new HashMap<>();
+        greenCoordinates = new HashMap<>();
+        yellowCoordinates = new HashMap<>();
+        addColorCoordinates();
+        currentPlayer = 'b'; // Sets the current player
         boardView = new BoardView(this, board, screenWidth, screenHeight, (HashMap<String, Point>) pieceCoordinates);
         boardView.setBackgroundColor(Color.WHITE);
 
@@ -65,12 +76,28 @@ public class GameActivity extends Activity{
 
         Button rollButton = new Button(this);
         rollButton.setText("Roll");
-
         Button changeButton = new Button(this);
         changeButton.setText("Change");
-
         Button chooseButton = new Button(this);
         chooseButton.setText("Choose");
+
+        rollButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                rollDiceAction();
+            }
+        });
+
+        changeButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                changePieceAction();
+            }
+        });
+
+        chooseButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                choosePieceAction();
+            }
+        });
 
         LinearLayout horizontalLayout = new LinearLayout(this);
         horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -167,4 +194,126 @@ public class GameActivity extends Activity{
         pieceCoordinates.put("y3", new Point(3,11));
         pieceCoordinates.put("y4", new Point(3,12));
     }
+
+    private void addColorCoordinates() {
+        for (int i = 0; i < pieceNames.size(); i++) {
+            String pieceName = pieceNames.get(i);
+            switch (pieceName.charAt(0)) {
+                case 'b':
+                    blueCoordinates.put(pieceName, pieceCoordinates.get(pieceName));
+                    break;
+                case 'r':
+                    redCoordinates.put(pieceName, pieceCoordinates.get(pieceName));
+                    break;
+                case 'g':
+                    greenCoordinates.put(pieceName, pieceCoordinates.get(pieceName));
+                    break;
+                case 'y':
+                    yellowCoordinates.put(pieceName, pieceCoordinates.get(pieceName));
+                    break;
+            }
+        }
+    }
+
+    private void rollDiceAction() {
+        int roll = (int) (Math.random()*6+1);
+        boardView.setDiceView(roll);
+    }
+
+    private void changePieceAction() {
+        String currentPiece = boardView.getChosenPiece();
+        switch (currentPiece.charAt(0)) {
+            case 'b':
+                List<String> bList = new ArrayList<>(blueCoordinates.keySet());
+                Collections.sort(bList);
+                boardView.setChosenPiece(bList.get((bList.indexOf(currentPiece) + 1)%(bList.size())));
+                break;
+            case 'r':
+                List<String> rList = new ArrayList<>(redCoordinates.keySet());
+                Collections.sort(rList);
+                boardView.setChosenPiece(rList.get((rList.indexOf(currentPiece) + 1)%(rList.size())));
+                break;
+            case 'g':
+                List<String> gList = new ArrayList<>(greenCoordinates.keySet());
+                Collections.sort(gList);
+                boardView.setChosenPiece(gList.get((gList.indexOf(currentPiece) + 1)%(gList.size())));
+                break;
+            case 'y':
+                List<String> yList = new ArrayList<>(yellowCoordinates.keySet());
+                Collections.sort(yList);
+                boardView.setChosenPiece(yList.get((yList.indexOf(currentPiece) + 1)%(yList.size())));
+                break;
+            default:
+                switch (currentPlayer) {
+                    case 'b':
+                        boardView.setChosenPiece(blueCoordinates.entrySet().iterator().next().getKey());
+                        break;
+                    case 'r':
+                        boardView.setChosenPiece(redCoordinates.entrySet().iterator().next().getKey());
+                        break;
+                    case 'g':
+                        boardView.setChosenPiece(greenCoordinates.entrySet().iterator().next().getKey());
+                        break;
+                    case 'y':
+                        boardView.setChosenPiece(yellowCoordinates.entrySet().iterator().next().getKey());
+                        break;
+                }
+                break;
+
+        }
+    }
+
+    private void choosePieceAction(){
+        if (boardView.getDiceView() == 0){rollDiceAction();}
+
+        Map<String, Point> movedPieceCoordinates = boardView.getPieceCoordinates();
+        movedPieceCoordinates.put(boardView.getChosenPiece(), nextCoordinates(movedPieceCoordinates.get(boardView.getChosenPiece())));
+        boardView.setPieceCoordinates(movedPieceCoordinates);
+    }
+
+    private Point nextCoordinates(Point oldCoordinate) {
+        Point newCoordinates = null;
+        int diceCount = boardView.getDiceView();
+        Map<String, Point> pieceCoordinates = boardView.getPieceCoordinates();
+        List<Point> pathCoordinates = boardView.generatePath();
+        int indexCurrentCoordinates = pathCoordinates.indexOf(pieceCoordinates.get(boardView.getChosenPiece()));
+        Log.i("index", indexCurrentCoordinates + "");
+
+        if (indexCurrentCoordinates == -1) {
+            switch (currentPlayer) {
+                case 'b':
+                    return new Point(1, 6);
+                case 'r':
+                    return new Point(8, 1);
+                case 'g':
+                    return new Point(13, 8);
+                case 'y':
+                    return new Point(6, 13);
+            }
+        } else {
+
+            indexCurrentCoordinates += diceCount;
+            newCoordinates = pathCoordinates.get(indexCurrentCoordinates % pathCoordinates.size());
+            return newCoordinates;
+        }
+        return newCoordinates;
+    }
+
+    private Point nextFinishCoord(Point oldCoordinate, int stepsLeft) {
+        return new Point (7, 13);
+    }
+
+    private void switchBetweenColors() {
+        ArrayList<Character> player = new ArrayList<Character>();
+        player.add('b');
+        player.add('r');
+        player.add('g');
+        player.add('y');
+
+        currentPlayer = player.get((int) (Math.random()*4));
+
+    }
+
+
+
 }
