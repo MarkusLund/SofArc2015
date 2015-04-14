@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.text.util.Linkify;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
@@ -409,8 +410,11 @@ public class GameActivity extends Activity{
 
    }
 
-    private Point nextFinishCoord(Point oldCoordinate, int stepsLeft) {
-        return new Point (4, 7);
+    private void nextFinishCoord(Point oldCoordinate, int stepsLeft) {
+        switch (currentPlayer) {
+            case 'b':
+                Log.e("eat pie", "funny shit");
+        }
     }
 
     private int getPathIndex(Point point){
