@@ -255,7 +255,7 @@ public class GameActivity extends Activity{
         return apieceCoordinates;
     }
 
-    private void addColorCoordinates() {
+    private void addColorCoordinates() { // adds color pieces for choosing current piece functionality
         for (int i = 0; i < pieceNames.size(); i++) {
             String pieceName = pieceNames.get(i);
             switch (pieceName.charAt(0)) {
@@ -275,8 +275,8 @@ public class GameActivity extends Activity{
         }
     }
 
-    private void changeButtonAction() {
-        if (chosenPieceToMove == null) {
+    private void changeButtonAction() { // implements changing of chosen piece functionality
+        if (chosenPieceToMove == null) { // if no piece has been selected, choose first piece
             String nextPiece = null;
             switch (currentPlayer) {
                 case 'b':
@@ -294,7 +294,7 @@ public class GameActivity extends Activity{
             }
             boardView.setChosenPiece(nextPiece);
             chosenPieceToMove = nextPiece;
-        }else {
+        }else { // if one piece has been selected, chose next possible piece in list
             String currentPiece = chosenPieceToMove;
             String nextPiece;
             List<String> listCoordinates = new ArrayList<>();
@@ -314,7 +314,7 @@ public class GameActivity extends Activity{
                     break;
             }
 
-            Collections.sort(listCoordinates);
+            Collections.sort(listCoordinates); // sorts list, b1, b2, b3, b4
             nextPiece = listCoordinates.get((listCoordinates.indexOf(currentPiece) + 1) % (listCoordinates.size()));
             boardView.setChosenPiece(nextPiece);
             chosenPieceToMove = nextPiece;
@@ -407,7 +407,7 @@ public class GameActivity extends Activity{
         }
 
         //change current player
-        //switchBetweenColors();
+        switchBetweenColors();
 
         //set chosen piece to null
         chosenPieceToMove = null;
@@ -424,7 +424,7 @@ public class GameActivity extends Activity{
 
     }
 
-    private void exitHomeMove() {
+    private void exitHomeMove() { // moves a piece from home to start position on board
         switch (currentPlayer) {
             case 'b':
                 pieceCoordinates.put(chosenPieceToMove, new Point(1, 6));
@@ -443,16 +443,16 @@ public class GameActivity extends Activity{
 
     }
 
-    private void movePiece(){
+    private void movePiece(){ // moves a piece x number of steps
 
         int diceRoll = dice.getRoll();
-        int oldPathIndexOfPiece = getPathIndex(pieceCoordinates.get(chosenPieceToMove));
+        int oldPathIndexOfPiece = getPathIndex(pieceCoordinates.get(chosenPieceToMove)); // gets index of current piece on path
 
         if (pathCoordinates.contains(pieceCoordinates.get(chosenPieceToMove))){ // if the piece is on the Path
             for (int i = 0; i < diceRoll; i++) {
-                oldPathIndexOfPiece++;
+                oldPathIndexOfPiece++; // moves the piece forward one step at a time
                 if (oldPathIndexOfPiece == 52 && chosenPieceToMove.charAt(0) == 'b') { // if at blue finish, enter blue safezone
-                    nextFinishCoord(diceRoll-i);
+                    nextFinishCoord(diceRoll-i); // start running nextFinishCoord function with number of steps left
                     break;
                 }
                 if (oldPathIndexOfPiece == 13 && chosenPieceToMove.charAt(0) == 'r') {
@@ -467,14 +467,14 @@ public class GameActivity extends Activity{
                     nextFinishCoord(diceRoll - i);
                     break;
                 }
-                else {
+                else { // if not at a colors finish position, continue down the path
                     pieceCoordinates.put(chosenPieceToMove, pathCoordinates.get(oldPathIndexOfPiece%52));
                     boardView.setPieceCoordinates(pieceCoordinates);
                 }
-                // to add steps, implement wait/sleep
+                // implements wait/sleep
                 stepSleepTime(1000);
             }
-        }
+        } // if the piece already is on the finishpath, run nexFinishCoord with x number of steps
         else if (bluePathCoordinates.contains(pieceCoordinates.get(chosenPieceToMove))){
             nextFinishCoord(diceRoll);
             }
@@ -489,28 +489,28 @@ public class GameActivity extends Activity{
         }
 
         else{// if in home area, move to start
-          //  if (dice.getRoll() == 6) {
+          //  if (dice.getRoll() == 6) {  // only allow roling a six the option of exiting home
                 exitHomeMove();
             //}
         }
    }
 
-    private void nextFinishCoord(int stepsLeft) {
-        boolean towardsGoal = true;
+    private void nextFinishCoord(int stepsLeft) { // moves piece x number of steps forward and back in finish path
+        boolean towardsGoal = true; // if heading towards or away from goal
         switch (currentPlayer) {
             case 'b':
-                int indexBlue = bluePathCoordinates.indexOf(pieceCoordinates.get(chosenPieceToMove));
+                int indexBlue = bluePathCoordinates.indexOf(pieceCoordinates.get(chosenPieceToMove)); //current index on finishPath
                 Log.e("initial indexBlue", indexBlue+"");
-                if (indexBlue + stepsLeft == 5){
+                if (indexBlue + stepsLeft == 5){ // if moves result in entering goal, remove the piece
                     pieceCoordinates.remove(chosenPieceToMove);
                     blueCoordinates.remove(chosenPieceToMove);
                     Log.e("Winner", indexBlue +"  "+ stepsLeft);
                     break;
                 }
-                for (int i = stepsLeft; i >= 1; i--) {
+                for (int i = stepsLeft; i >= 1; i--) { // moves piece one step at a rime forward, and if enough moves, back again
                     Log.e("for loop", i + "");
-                    indexBlue = towardsGoal ? indexBlue + 1 : indexBlue - 1;
-                    towardsGoal = indexBlue==5 ? !towardsGoal : towardsGoal;
+                    indexBlue = towardsGoal ? indexBlue + 1 : indexBlue - 1; // decides what direction to move piece
+                    towardsGoal = indexBlue==5 ? !towardsGoal : towardsGoal; // changes direction of piece if index is 5 ( outofbounds )
                     if (indexBlue==5){
                         indexBlue = 4;
                         i--;
@@ -598,18 +598,24 @@ public class GameActivity extends Activity{
         return pathCoordinates.lastIndexOf(point);
     }
 
-    private void stepSleepTime(int time) {
+    private void stepSleepTime(int time) { // when implemented, gives appearance of movement instead of teleportation of pieces
         //SystemClock.sleep(time);
     }
 
-    private void switchBetweenColors() {
+    private void switchBetweenColors() { // simple method that randomly choses what player to use
         ArrayList<Character> player = new ArrayList<Character>();
         player.add('b');
         player.add('r');
         player.add('g');
         player.add('y');
 
-        currentPlayer = player.get((int) (Math.random()*4));
+        //random
+        //currentPlayer = player.get((int) (Math.random()*4));
+
+        //nextplayer
+        int index = player.indexOf(currentPlayer);
+        index++;
+        currentPlayer = player.get(index%4);
 
     }
 }
