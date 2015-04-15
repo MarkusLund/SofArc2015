@@ -1,5 +1,8 @@
 package no.ntnu.sa2015.sofarc2015;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -29,6 +32,9 @@ public class StartApp extends ActionBarActivity {
         final Button p3ColourBtn = (Button) findViewById(R.id.player_3_color_button);
         final Button p4ColourBtn = (Button) findViewById(R.id.player_4_color_button);
 
+        //get start button
+        final Button startBtn = (Button) findViewById(R.id.startButton);
+
         String playerButtonText = getResources().getString(R.string.player_button_text);
 
         p1Btn.setText(String.format(playerButtonText, gameState.getP1().getPlayerId(), gameState.getP1().getStateString()));
@@ -42,7 +48,6 @@ public class StartApp extends ActionBarActivity {
         p3Btn.setOnClickListener(new PlayerStateOnClickListener(gameState.getP3(), p3Btn, playerButtonText));
         p4Btn.setOnClickListener(new PlayerStateOnClickListener(gameState.getP4(), p4Btn, playerButtonText));
 
-
         p1ColourBtn.setBackgroundColor(gameState.getP1().getColourCode());
         p2ColourBtn.setBackgroundColor(gameState.getP2().getColourCode());
         p3ColourBtn.setBackgroundColor(gameState.getP3().getColourCode());
@@ -53,14 +58,7 @@ public class StartApp extends ActionBarActivity {
         p3ColourBtn.setOnClickListener(new PlayerColourOnClickListener(gameState.getP3(), p3ColourBtn));
         p4ColourBtn.setOnClickListener(new PlayerColourOnClickListener(gameState.getP4(), p4ColourBtn));
 
-        Button startbtn = (Button) findViewById(R.id.startButton);
-        startbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), GameActivity.class);
-                startActivity(i);
-            }
-        });
+        startBtn.setOnClickListener(new StartButtonOnClickListener(this, gameState, startBtn));
     }
 
     @Override
@@ -126,5 +124,25 @@ class PlayerColourOnClickListener implements View.OnClickListener {
     public void onClick(View v) {
         state.setNextColour();
         button.setBackgroundColor(state.getColourCode());
+    }
+
+}
+
+class StartButtonOnClickListener implements View.OnClickListener {
+
+    private StartGameState state;
+    private Context c;
+    private Button button;
+
+    public StartButtonOnClickListener(Activity c,StartGameState gameState, Button button) {
+        this.state = gameState;
+        this.c = c;
+        this.button = button;
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent i = new Intent(c.getApplicationContext(), GameActivity.class);
+        c.startActivity(i, ActivityOptions.makeScaleUpAnimation(v, 0, 0, button.getWidth(), button.getHeight()).toBundle());
     }
 }

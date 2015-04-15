@@ -42,7 +42,7 @@ public class BoardView extends View{
 
     @Override
     public void onDraw(Canvas canvas) {
-        Log.e("BoardView", "onDraw called");
+        Log.i("BoardView", "onDraw called");
         drawBoard(canvas);
         drawPieces(canvas);
         if (this.diceRoll != 0){
@@ -100,7 +100,7 @@ public class BoardView extends View{
 
 
     private void drawPieces(Canvas canvas) {
-        Log.e("BoardView", "drawPieces");
+        Log.i("BoardView", "drawPieces");
         for (Map.Entry<String, Point> entry : pieceCoordinates.entrySet())
         {
             drawPiece(canvas, entry.getKey());
@@ -133,7 +133,7 @@ public class BoardView extends View{
     }
 
     private void drawBoard(Canvas canvas) {
-        Log.e("BoardView", "drawBoard");
+        Log.i("BoardView", "drawBoard");
         for (int i = 0; i < board.size(); i++) {
             for (int j = 0; j < board.get(0).size(); j++) {
                 String tile = board.get(i).get(j);
