@@ -11,4 +11,8 @@
     <string name="really_quit">Do you really want to end the game?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="invalid_state_title">Invalid State</string>
+    <string name="invalid_state_text">The game configuration is invalid. In order to start the game you must select at
+        least a human player and the colors of the active players should be different.
+    </string>
 </resources>

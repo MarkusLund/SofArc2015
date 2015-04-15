@@ -1,5 +1,10 @@
 package no.ntnu.sa2015.sofarc2015;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 /**
  * Created by catalin on 14/04/15.
  */
@@ -44,5 +49,25 @@ public class StartGameState {
 
     public PlayerState getP4() {
         return p4;
+    }
+
+    public boolean isValid() {
+        if(p1.getType()!=PlayerType.ON &&
+                p2.getType()!=PlayerType.ON &&
+                p3.getType()!=PlayerType.ON &&
+                p4.getType()!=PlayerType.ON) {
+            return false;
+        }
+        Set<Integer> colours = new HashSet<>();
+
+        if(p1.getType() != PlayerType.OFF)
+            colours.add(p1.getColourCode());
+        if(p2.getType() != PlayerType.OFF && !colours.add(p2.getColourCode()))
+            return false;
+        if(p3.getType() != PlayerType.OFF && !colours.add(p3.getColourCode()))
+            return false;
+        if(p4.getType() != PlayerType.OFF && !colours.add(p4.getColourCode()))
+            return false;
+        return true;
     }
 }

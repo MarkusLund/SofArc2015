@@ -48,4 +48,8 @@ public class PlayerState {
     public Integer getPlayerId() {
         return playerId;
     }
+
+    public PlayerType getType() {
+        return type;
+    }
 }

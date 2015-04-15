@@ -2,7 +2,9 @@ package no.ntnu.sa2015.sofarc2015;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -142,7 +144,20 @@ class StartButtonOnClickListener implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        Intent i = new Intent(c.getApplicationContext(), GameActivity.class);
-        c.startActivity(i, ActivityOptions.makeScaleUpAnimation(v, 0, 0, button.getWidth(), button.getHeight()).toBundle());
+        if(state.isValid()){
+            Intent i = new Intent(c.getApplicationContext(), GameActivity.class);
+            c.startActivity(i, ActivityOptions.makeScaleUpAnimation(v, 0, 0, button.getWidth(), button.getHeight()).toBundle());
+        } else {
+            new AlertDialog.Builder(c)
+                    .setTitle(c.getString(R.string.invalid_state_title))
+                    .setMessage(c.getString(R.string.invalid_state_text))
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // continue with delete
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
     }
 }
