@@ -354,7 +354,7 @@ public class GameActivity extends Activity{
                 public void onClick(DialogInterface dialog, int which) {
                     movePiece();
 
-//                    endTurn();
+                    endTurn();
                 }
             });
 
@@ -377,9 +377,37 @@ public class GameActivity extends Activity{
     }
 
     private void endTurn() {
+        //check if winner
+        switch (currentPlayer) {
+            case ('b'):
+                if (blueCoordinates.size() == 0) {
+                    Log.e("winner", currentPlayer +"");
+                    // display winscreen, return to menu
+                    finish();
+                }
+                break;
+            case ('r'):
+                if (redCoordinates.size() == 0) {
+                    Log.e("winner", currentPlayer +"");
+                    finish();
+                }
+                break;
+            case ('g'):
+                if (greenCoordinates.size() == 0) {
+                    Log.e("winner", currentPlayer +"");
+                    finish();
+                }
+                break;
+            case ('y'):
+                if (yellowCoordinates.size() == 0) {
+                    Log.e("winner", currentPlayer +"");
+                    finish();
+                }
+                break;
+        }
 
         //change current player
-
+        //switchBetweenColors();
 
         //set chosen piece to null
         chosenPieceToMove = null;
@@ -443,6 +471,8 @@ public class GameActivity extends Activity{
                     pieceCoordinates.put(chosenPieceToMove, pathCoordinates.get(oldPathIndexOfPiece%52));
                     boardView.setPieceCoordinates(pieceCoordinates);
                 }
+                // to add steps, implement wait/sleep
+                stepSleepTime(1000);
             }
         }
         else if (bluePathCoordinates.contains(pieceCoordinates.get(chosenPieceToMove))){
@@ -487,6 +517,8 @@ public class GameActivity extends Activity{
                     }
                     Log.e("index", indexBlue + "");
                     pieceCoordinates.put(chosenPieceToMove, bluePathCoordinates.get(indexBlue));
+                    // to add steps, implement wait/sleep
+                    stepSleepTime(1000);
                 }
                 break;
             case 'r':
@@ -508,6 +540,8 @@ public class GameActivity extends Activity{
                     }
                     Log.e("index", indexRed + "");
                     pieceCoordinates.put(chosenPieceToMove, redPathCoordinates.get(indexRed));
+                    // to add steps, implement wait/sleep
+                    stepSleepTime(1000);
                 }
                 break;
             case 'g':
@@ -529,6 +563,8 @@ public class GameActivity extends Activity{
                     }
                     Log.e("index", indexGreen + "");
                     pieceCoordinates.put(chosenPieceToMove, greenPathCoordinates.get(indexGreen));
+                    // to add steps, implement wait/sleep
+                    stepSleepTime(1000);
                 }
                 break;
             case 'y':
@@ -550,6 +586,8 @@ public class GameActivity extends Activity{
                     }
                     Log.e("index", indexYellow + "");
                     pieceCoordinates.put(chosenPieceToMove, yellowPathCoordinates.get(indexYellow));
+                    // to add steps, implement wait/sleep
+                    stepSleepTime(1000);
                 }
                 break;
         }
@@ -560,6 +598,9 @@ public class GameActivity extends Activity{
         return pathCoordinates.lastIndexOf(point);
     }
 
+    private void stepSleepTime(int time) {
+        //SystemClock.sleep(time);
+    }
 
     private void switchBetweenColors() {
         ArrayList<Character> player = new ArrayList<Character>();
