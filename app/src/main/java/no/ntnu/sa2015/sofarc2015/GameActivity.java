@@ -43,11 +43,16 @@ public class GameActivity extends Activity{
     private Dice dice;
 
     private char currentPlayer; //SAVE
+    private char[] players = {'b','r','g','y'};
+    private int index = 0;
+
     private HashMap<String, Point> pieceCoordinates; //SAVE
     private int nofSoundFiles;
     private int[] soundFiles;
     private String chosenPieceToMove;
     private boolean hasRolled;
+
+    private StartGameState state = StartGameState.getInstance();
 
 
     @Override
@@ -63,6 +68,8 @@ public class GameActivity extends Activity{
             currentPlayer = 'b'; // Sets the current player
         }
 
+
+
         // creating LinearLayout
         LinearLayout linLayout = new LinearLayout(this);
         // specifying vertical orientation
@@ -76,7 +83,6 @@ public class GameActivity extends Activity{
         this.dice = new Dice();
 
         generateSoundFiles();
-
         getScreenSizes();
 
         pieceNames = Arrays.asList("b1", "b2", "b3", "b4", "r1", "r2", "r3", "r4", "g1", "g2", "g3", "g4", "y1", "y2", "y3", "y4");
@@ -126,6 +132,7 @@ public class GameActivity extends Activity{
         });
 
         chooseButton.setOnClickListener(new View.OnClickListener() {
+             @Override
             public void onClick(View v) {
                 chooseButtonAction();
             }
@@ -609,22 +616,13 @@ public class GameActivity extends Activity{
         //SystemClock.sleep(time);
     }
 
-    private void switchBetweenColors() { // simple method that randomly choses what player to use
-        ArrayList<Character> player = new ArrayList<Character>();
-        player.add('b');
-        player.add('r');
-        player.add('g');
-        player.add('y');
-
-        //random
-        //currentPlayer = player.get((int) (Math.random()*4));
-
+    private void switchBetweenColors() { // simple method that randomly??WUT choses what player to use
         //nextplayer
-        int index = player.indexOf(currentPlayer);
         index++;
-        currentPlayer = player.get(index%4);
-
+        currentPlayer = players[index%4];
     }
+
+
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             new AlertDialog.Builder(this)
