@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SofArc2015</string>
+    <string name="app_name">Don\'t get mad bro!!</string>
 
     <string name="hello_world">Hello World!</string>
     <string name="action_settings">Settings</string>
@@ -35,4 +35,9 @@
 
     <string name="chooseButton_needRoll">You must roll the dice!</string>
     <string name="chooseButton_needChoice">You must choose a piece to move.</string>
+    <string name="player_button_text">Player %1$d - %2$s</string>
+    <string name="quit">Quit game?</string>
+    <string name="really_quit">Do you really want to end the game?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>
