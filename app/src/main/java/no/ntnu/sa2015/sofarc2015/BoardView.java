@@ -23,6 +23,8 @@ public class BoardView extends View{
     private ArrayList<List<String>> board;
     private int tileWidth, screenWidth, screenHeight;
     private Map<String, Point> pieceCoordinates;
+    private final int textSize;
+    private final int offset;
 
 
     private int diceRoll = 0;
@@ -38,69 +40,84 @@ public class BoardView extends View{
         this.tileWidth = this.screenWidth/board.size();
         this.pieceCoordinates = pieceCoordinates;
 
+        offset = (int) (getBoardHeight()/42);
+        textSize = (int) (getBoardWidth()/20);
+
     }
 
     @Override
     public void onDraw(Canvas canvas) {
-        Log.i("BoardView", "onDraw called");
+        //Log.e("BoardView", "onDraw called");
         drawBoard(canvas);
         drawPieces(canvas);
-        if (this.diceRoll != 0){
-            drawDice(canvas, this.diceRoll);
-        }
+        drawDice(canvas, this.diceRoll);
     }
 
     private void drawDice(Canvas canvas, int dice) {
         paint.setColor(Color.BLACK);
         paint.setStyle(Paint.Style.FILL);
 
-        for (int i = 0; i < board.size(); i++) {
-            for (int j = 0; j < board.get(0).size(); j++) {
-                String tile = board.get(i).get(j);
-                switch (tile) {
-                    case "d1":
-                        if (dice != 1) {
-                            canvas.drawCircle(j*tileWidth+tileWidth/2, i*tileWidth+tileWidth/2, tileWidth / 3, paint);
-                        }
-                        break;
-                    case "d3":
-                        if (dice == 4 || dice == 5 || dice == 6){
-                            canvas.drawCircle(j*tileWidth+tileWidth/2, i*tileWidth+tileWidth/2, tileWidth / 3, paint);
-                        }
-                        break;
-                    case "d4":
-                        if (dice == 6){
-                            canvas.drawCircle(j*tileWidth+tileWidth/2, i*tileWidth+tileWidth/2, tileWidth / 3, paint);
-                        }
-                        break;
-                    case "d5":
-                        if (dice == 1 || dice == 3 || dice == 5){
-                            canvas.drawCircle(j*tileWidth+tileWidth/2, i*tileWidth+tileWidth/2, tileWidth / 3, paint);
-                        }
-                        break;
-                    case "d6":
-                        if (dice == 6){
-                            canvas.drawCircle(j*tileWidth+tileWidth/2, i*tileWidth+tileWidth/2, tileWidth / 3, paint);
-                        }
-                        break;
-                    case "d7":
-                        if (dice == 4 || dice == 5 || dice == 6){
-                            canvas.drawCircle(j*tileWidth+tileWidth/2, i*tileWidth+tileWidth/2, tileWidth / 3, paint);
-                        }
-                        break;
-                    case "d9":
-                        if (dice != 1) {
-                            canvas.drawCircle(j*tileWidth+tileWidth/2, i*tileWidth+tileWidth/2, tileWidth / 3, paint);
-                        }
-                        break;
+        if (dice == 0){
+            paint.setTextSize(textSize);
+            paint.setFakeBoldText(true);
+            paint.setTextAlign(Paint.Align.CENTER);
+
+            canvas.drawText("TAP", getBoardWidth() / 2, getBoardHeight() / 2 - textSize + offset, paint);
+            canvas.drawText("TO", getBoardWidth() / 2, getBoardHeight() / 2 + offset, paint);
+            canvas.drawText("ROLL", getBoardWidth()/2, getBoardHeight()/2+textSize+offset, paint);
+
+        }else {
+
+
+            for (int i = 0; i < board.size(); i++) {
+                for (int j = 0; j < board.get(0).size(); j++) {
+                    String tile = board.get(i).get(j);
+                    switch (tile) {
+                        case "d1":
+                            if (dice != 1) {
+                                canvas.drawCircle(j * tileWidth + tileWidth / 2, i * tileWidth + tileWidth / 2, tileWidth / 3, paint);
+                            }
+                            break;
+                        case "d3":
+                            if (dice == 4 || dice == 5 || dice == 6) {
+                                canvas.drawCircle(j * tileWidth + tileWidth / 2, i * tileWidth + tileWidth / 2, tileWidth / 3, paint);
+                            }
+                            break;
+                        case "d4":
+                            if (dice == 6) {
+                                canvas.drawCircle(j * tileWidth + tileWidth / 2, i * tileWidth + tileWidth / 2, tileWidth / 3, paint);
+                            }
+                            break;
+                        case "d5":
+                            if (dice == 1 || dice == 3 || dice == 5) {
+                                canvas.drawCircle(j * tileWidth + tileWidth / 2, i * tileWidth + tileWidth / 2, tileWidth / 3, paint);
+                            }
+                            break;
+                        case "d6":
+                            if (dice == 6) {
+                                canvas.drawCircle(j * tileWidth + tileWidth / 2, i * tileWidth + tileWidth / 2, tileWidth / 3, paint);
+                            }
+                            break;
+                        case "d7":
+                            if (dice == 4 || dice == 5 || dice == 6) {
+                                canvas.drawCircle(j * tileWidth + tileWidth / 2, i * tileWidth + tileWidth / 2, tileWidth / 3, paint);
+                            }
+                            break;
+                        case "d9":
+                            if (dice != 1) {
+                                canvas.drawCircle(j * tileWidth + tileWidth / 2, i * tileWidth + tileWidth / 2, tileWidth / 3, paint);
+                            }
+                            break;
+                    }
                 }
             }
         }
+
     }
 
 
     private void drawPieces(Canvas canvas) {
-        Log.i("BoardView", "drawPieces");
+        //Log.e("BoardView", "drawPieces");
         for (Map.Entry<String, Point> entry : pieceCoordinates.entrySet())
         {
             drawPiece(canvas, entry.getKey());
@@ -133,7 +150,7 @@ public class BoardView extends View{
     }
 
     private void drawBoard(Canvas canvas) {
-        Log.i("BoardView", "drawBoard");
+        //Log.e("BoardView", "drawBoard");
         for (int i = 0; i < board.size(); i++) {
             for (int j = 0; j < board.get(0).size(); j++) {
                 String tile = board.get(i).get(j);
@@ -188,12 +205,16 @@ public class BoardView extends View{
         return tileWidth*board.size();
     }
 
+    public float getBoardWidth(){
+        return tileWidth*board.get(0).size();
+    }
+
 
     public List<Point> generatePath() {
         List<Point> path = new ArrayList<>();
 
         path.add(new Point(0,6));
-        path.add(new Point(1,6)); //blue start
+        path.add(new Point(1,6)); //blue start, index 1
         path.add(new Point(2,6));
         path.add(new Point(3,6));
         path.add(new Point(4,6));
@@ -206,10 +227,10 @@ public class BoardView extends View{
         path.add(new Point(6,1));
         path.add(new Point(6,0));
 
-        path.add(new Point(7,0)); //top middle
+        path.add(new Point(7,0)); //top middle, index 12
 
         path.add(new Point(8,0));
-        path.add(new Point(8,1)); //red start
+        path.add(new Point(8,1)); //red start, index 14
         path.add(new Point(8,2));
         path.add(new Point(8,3));
         path.add(new Point(8,4));
@@ -222,10 +243,10 @@ public class BoardView extends View{
         path.add(new Point(13,6));
         path.add(new Point(14,6));
 
-        path.add(new Point(14,7)); //right middle
+        path.add(new Point(14,7)); //right middle, index 25
 
         path.add(new Point(14,8));
-        path.add(new Point(13,8)); //green start
+        path.add(new Point(13,8)); //green start, index 27
         path.add(new Point(12,8));
         path.add(new Point(11,8));
         path.add(new Point(10,8));
@@ -238,10 +259,10 @@ public class BoardView extends View{
         path.add(new Point(8,13));
         path.add(new Point(8,14));
 
-        path.add(new Point(7,14)); //bottom middle
+        path.add(new Point(7,14)); //bottom middle, index 38
 
         path.add(new Point(6,14));
-        path.add(new Point(6,13)); //yellow start
+        path.add(new Point(6,13)); //yellow start, index 40
         path.add(new Point(6,12));
         path.add(new Point(6,11));
         path.add(new Point(6,10));
@@ -254,7 +275,7 @@ public class BoardView extends View{
         path.add(new Point(1,8));
         path.add(new Point(0,8));
 
-        path.add(new Point(0,7)); //left middle
+        path.add(new Point(0,7)); //left middle, index 51
 
         return path;
     }
@@ -263,7 +284,7 @@ public class BoardView extends View{
     public List<Point> generateYellowFinishPath() {
         List<Point> path = new ArrayList<>();
 
-        path.add(new Point(6,13)); //yellow start
+        //path.add(new Point(6,13)); //yellow start
         path.add(new Point(7,13));
         path.add(new Point(7,12));
         path.add(new Point(7,11));
@@ -276,7 +297,7 @@ public class BoardView extends View{
     public List<Point> generateBlueFinishPath() {
         List<Point> path = new ArrayList<>();
 
-        path.add(new Point(1,6)); //blue start
+        //path.add(new Point(1,6)); //blue start
         path.add(new Point(1,7));
         path.add(new Point(2,7));
         path.add(new Point(3,7));
@@ -289,7 +310,7 @@ public class BoardView extends View{
     public List<Point> generateRedFinishPath() {
         List<Point> path = new ArrayList<>();
 
-        path.add(new Point(8,1)); //red start
+        //path.add(new Point(8,1)); //red start
         path.add(new Point(7,1));
         path.add(new Point(7,2));
         path.add(new Point(7,3));
@@ -302,7 +323,7 @@ public class BoardView extends View{
     public List<Point> generateGreenFinishPath() {
         List<Point> path = new ArrayList<>();
 
-        path.add(new Point(13,8)); //green start
+        //path.add(new Point(13,8)); //green start
         path.add(new Point(13,7));
         path.add(new Point(12,7));
         path.add(new Point(11,7));
@@ -312,17 +333,9 @@ public class BoardView extends View{
         return path;
     }
 
-    public String getChosenPiece() {
-        return chosenPiece;
-    }
-
     public void setChosenPiece(String choice) {
         this.chosenPiece = choice;
         this.invalidate(); //calls the onDraw method
-    }
-
-    public int getDiceView() {
-        return diceRoll;
     }
 
     public void setDiceView(int diceRoll) {
@@ -333,9 +346,5 @@ public class BoardView extends View{
     public void setPieceCoordinates(Map<String, Point> pieceCoordinates) {
         this.pieceCoordinates = pieceCoordinates;
         this.invalidate();
-    }
-
-    public Map<String, Point> getPieceCoordinates() {
-        return pieceCoordinates;
     }
 }
