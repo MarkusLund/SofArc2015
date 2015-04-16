@@ -2,9 +2,6 @@ package no.ntnu.sa2015.sofarc2015;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -16,10 +13,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -27,7 +21,7 @@ import android.widget.LinearLayout;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,7 +29,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
 
 public class GameActivity extends Activity{
 
@@ -49,8 +42,8 @@ public class GameActivity extends Activity{
     private List<Point> bluePathCoordinates, redPathCoordinates, greenPathCoordinates, yellowPathCoordinates;
     private Dice dice;
 
-    private char currentPlayer;
-    private Map<String, Point> pieceCoordinates;
+    private char currentPlayer; //SAVE
+    private HashMap<String, Point> pieceCoordinates; //SAVE
     private int nofSoundFiles;
     private int[] soundFiles;
     private String chosenPieceToMove;
@@ -60,6 +53,15 @@ public class GameActivity extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            pieceCoordinates = (HashMap<String, Point>) savedInstanceState.getSerializable("Coordinates");
+            currentPlayer = savedInstanceState.getChar("currentPlayer");
+        } else {
+            //Creating the initial hashmap with all the piece coordinates piece : Point
+            pieceCoordinates = generateStartPositions();
+            currentPlayer = 'b'; // Sets the current player
+        }
 
         // creating LinearLayout
         LinearLayout linLayout = new LinearLayout(this);
@@ -77,17 +79,14 @@ public class GameActivity extends Activity{
 
         getScreenSizes();
 
-        //Creating the initial hashmap with all the piece coordinates piece : Point
-        pieceCoordinates = generateStartPositions();
-
         pieceNames = Arrays.asList("b1", "b2", "b3", "b4", "r1", "r2", "r3", "r4", "g1", "g2", "g3", "g4", "y1", "y2", "y3", "y4");
         blueCoordinates = new HashMap<>();
         redCoordinates = new HashMap<>();
         greenCoordinates = new HashMap<>();
         yellowCoordinates = new HashMap<>();
         addColorCoordinates();
-        currentPlayer = 'b'; // Sets the current player
-        boardView = new BoardView(this, board, screenWidth, screenHeight, (HashMap<String, Point>) pieceCoordinates);
+
+        boardView = new BoardView(this, board, screenWidth, screenHeight, pieceCoordinates);
         boardView.setBackgroundColor(Color.WHITE);
         pathCoordinates = boardView.generatePath();
         bluePathCoordinates = boardView.generateBlueFinishPath();
@@ -101,17 +100,17 @@ public class GameActivity extends Activity{
 
 
         Button helpButton = new Button(this);
-        helpButton.setText("Help");
+        helpButton.setText(R.string.helpButton_text);
         helpButton.setTextSize(20);
 
         helpView = new HelpView(this, screenWidth, screenHeight);
 
 
         Button changeButton = new Button(this);
-        changeButton.setText("Change");
+        changeButton.setText(R.string.changeButton_text);
         changeButton.setTextSize(20);
         Button chooseButton = new Button(this);
-        chooseButton.setText("Choose");
+        chooseButton.setText(R.string.chooseButton_text);
         chooseButton.setTextSize(20);
 
         helpButton.setOnClickListener(new View.OnClickListener() {
@@ -136,7 +135,7 @@ public class GameActivity extends Activity{
             @Override
             public void onClick(View v) {
                 //Updates dice.roll value to new int, and updates the BoardView with the new dice value
-                if (!hasRolled){
+                if (!hasRolled) {
                     boardView.setDiceView(dice.rollDice());
                     hasRolled = true;
                 }
@@ -645,4 +644,12 @@ public class GameActivity extends Activity{
             return super.onKeyDown(keyCode,event);
         }
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putChar("currentPlayer", currentPlayer);
+        outState.putSerializable("Coordinates", pieceCoordinates);
+        super.onSaveInstanceState(outState);
+    }
+
 }
