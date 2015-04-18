@@ -26,6 +26,7 @@ public class BoardView extends View{
     private final int textSize;
     private final int offset;
 
+    private StartGameState state = StartGameState.getInstance();
 
     private int diceRoll = 0;
     private String chosenPiece = "none"; // Set to prevent nullPointerException
@@ -127,13 +128,13 @@ public class BoardView extends View{
     private void drawPiece(Canvas canvas, String piece) {
         paint.setStyle(Paint.Style.FILL);
         if (piece.charAt(0) == 'b') {
-            paint.setColor(Color.BLUE);
-        }else if (piece.charAt(0) == 'y') {
-            paint.setColor(Color.YELLOW);
-        }else if (piece.charAt(0) == 'g') {
-            paint.setColor(Color.GREEN);
+            paint.setColor(state.getP1().getColourCode());
         }else if (piece.charAt(0) == 'r') {
-            paint.setColor(Color.RED);
+            paint.setColor(state.getP2().getColourCode());
+        }else if (piece.charAt(0) == 'g') {
+            paint.setColor(state.getP3().getColourCode());
+        }else if (piece.charAt(0) == 'y') {
+            paint.setColor(state.getP4().getColourCode());
         }
 
         if (piece.equals(chosenPiece)){
@@ -159,7 +160,7 @@ public class BoardView extends View{
                     case "1":
                     case "b":
                         paint.setStyle(Paint.Style.FILL);
-                        paint.setColor(Color.BLUE);
+                        paint.setColor(state.getP1().getColourCode());
                         paint.setStrokeWidth(3);
                         canvas.drawRect(j * tileWidth, i * tileWidth, j * tileWidth + tileWidth, i * tileWidth + tileWidth, paint);
                         break;
@@ -167,7 +168,7 @@ public class BoardView extends View{
                     case "2":
                     case "r":
                         paint.setStyle(Paint.Style.FILL);
-                        paint.setColor(Color.RED);
+                        paint.setColor(state.getP2().getColourCode());
                         paint.setStrokeWidth(3);
                         canvas.drawRect(j * tileWidth, i * tileWidth, j * tileWidth + tileWidth, i * tileWidth + tileWidth, paint);
                         break;
@@ -175,7 +176,7 @@ public class BoardView extends View{
                     case "4":
                     case "g":
                         paint.setStyle(Paint.Style.FILL);
-                        paint.setColor(Color.GREEN);
+                        paint.setColor(state.getP3().getColourCode());
                         paint.setStrokeWidth(3);
                         canvas.drawRect(j * tileWidth, i * tileWidth, j * tileWidth + tileWidth, i * tileWidth + tileWidth, paint);
                         break;
@@ -183,7 +184,7 @@ public class BoardView extends View{
                     case "3":
                     case "y":
                         paint.setStyle(Paint.Style.FILL);
-                        paint.setColor(Color.YELLOW);
+                        paint.setColor(state.getP4().getColourCode());
                         paint.setStrokeWidth(3);
                         canvas.drawRect(j * tileWidth, i * tileWidth, j * tileWidth + tileWidth, i * tileWidth + tileWidth, paint);
                         break;
