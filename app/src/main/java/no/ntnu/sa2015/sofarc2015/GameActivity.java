@@ -617,9 +617,7 @@ public class GameActivity extends Activity{
     }
 
     private void switchBetweenColors() { // simple method that randomly??WUT choses what player to use
-        //nextplayer
-        index++;
-        currentPlayer = players[index%4];
+        currentPlayer = players[++index%4];
     }
 
 
