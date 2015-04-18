@@ -12,16 +12,16 @@
     <string name="help_title">HELP</string>
     <string name="help_close">Close</string>
     <string name="help_text">
-    &#8226; Highest roll begins game\n
-    &#8226; Clockwise direction\n
-    &#8226; If no pieces are ingame and no 6 is rolled, you skip turn\n
-    &#8226; To enter the game you need to roll a 6\n
-    &#8226; You must always move a piece the amount shown bye dice\n
-    &#8226; If a 6 is rolled you may move 6 or enter another piece, and roll again\n
-    &#8226; Upon the third 6 rolled in a row, you forfeit your turn\n
-    &#8226; You can not land on your own piece, ERGO NO STACKING\n
-    &#8226; If you land on another player piece, you send the piece back to start\n \n
-    Official rules from:\n www.wikipedia.org/wiki/Ludo_(board_game)
+        &#8226; Highest roll begins the game\n
+        &#8226; The game is played in a clockwise direction\n
+        &#8226; To enter the game you need to roll a 6\n
+        &#8226; If no pieces are in play and no 6 is rolled, you skip your turn\n
+        &#8226; You must always move a piece the amount shown by dice\n
+        &#8226; If a 6 is rolled you can either move 6 or enter another piece into play, and roll again\n
+        &#8226; Upon the third 6 rolled in a row, you forfeit your turn\n
+        &#8226; You can not land on your own piece, ERGO NO STACKING\n
+        &#8226; If you land on another players piece, you send the piece back to the home area\n \n
+        Official rules from:\n www.wikipedia.org/wiki/Ludo_(board_game)
     </string>
 
 
