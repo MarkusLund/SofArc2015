@@ -43,6 +43,7 @@ public class GameActivity extends Activity{
     private Dice dice;
 
     private char currentPlayer;
+    private Point oldCoordinates = null;
     private Map<String, Point> pieceCoordinates, homeCoordinates;
     private int nofSoundFiles;
     private int[] soundFiles;
@@ -279,8 +280,8 @@ public class GameActivity extends Activity{
     }
 
     private void changeButtonAction() { // implements changing of chosen piece functionality
+        String nextPiece = null;
         if (chosenPieceToMove == null) { // if no piece has been selected, choose first piece
-            String nextPiece = null;
             switch (currentPlayer) {
                 case 'b':
                     nextPiece = blueCoordinates.entrySet().iterator().next().getKey();
@@ -295,11 +296,9 @@ public class GameActivity extends Activity{
                     nextPiece = yellowCoordinates.entrySet().iterator().next().getKey();
                     break;
             }
-            boardView.setChosenPiece(nextPiece);
-            chosenPieceToMove = nextPiece;
-        }else { // if one piece has been selected, chose next possible piece in list
+        }
+        else { // if one piece has been selected, chose next possible piece in list
             String currentPiece = chosenPieceToMove;
-            String nextPiece;
             List<String> listCoordinates = new ArrayList<>();
 
             switch (currentPiece.charAt(0)) {
@@ -319,9 +318,9 @@ public class GameActivity extends Activity{
 
             Collections.sort(listCoordinates); // sorts list, b1, b2, b3, b4
             nextPiece = listCoordinates.get((listCoordinates.indexOf(currentPiece) + 1) % (listCoordinates.size()));
-            boardView.setChosenPiece(nextPiece);
-            chosenPieceToMove = nextPiece;
         }
+        boardView.setChosenPiece(nextPiece);
+        chosenPieceToMove = nextPiece;
     }
 
     private void chooseButtonAction(){
@@ -349,13 +348,17 @@ public class GameActivity extends Activity{
             alert.show();
         }
         else {
+
+            movePiece(); // move is done before
+
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
             builder.setTitle(R.string.end_turn_title);
+            builder.setCancelable(false);
 
             builder.setPositiveButton(R.string.end_turn_finish, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    movePiece();
+//                    movePiece();
 
                     endTurn();
                 }
@@ -364,8 +367,10 @@ public class GameActivity extends Activity{
             builder.setNeutralButton(R.string.end_turn_undo, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     // should first make move, then undo it when this button is pressed
+                    undoMove();
                 }
             });
+
 
             AlertDialog dialog = builder.create();
             WindowManager.LayoutParams wmlp = dialog.getWindow().getAttributes();
@@ -452,7 +457,7 @@ public class GameActivity extends Activity{
 
         int diceRoll = dice.getRoll();
         int oldPathIndexOfPiece = getPathIndex(pieceCoordinates.get(chosenPieceToMove)); // gets index of current piece on path
-
+        oldCoordinates = pieceCoordinates.get(chosenPieceToMove); // oldCoordinates for undoMove
         if (pathCoordinates.contains(pieceCoordinates.get(chosenPieceToMove))){ // if the piece is on the Path
             for (int i = 0; i < diceRoll; i++) {
                 oldPathIndexOfPiece++; // moves the piece forward one step at a time
@@ -506,12 +511,20 @@ public class GameActivity extends Activity{
             String checkedPiece = entry.getKey();
             Point checkedPieceValue = entry.getValue();
 
-            if(!chosenPieceToMove.equals(checkedPiece) && pieceCoordinates.get(chosenPieceToMove).equals(checkedPieceValue)) {
+            if(!chosenPieceToMove.equals(checkedPiece) && chosenPieceToMove.charAt(0) != checkedPiece.charAt(0) && pieceCoordinates.get(chosenPieceToMove).equals(checkedPieceValue)) {
                 pieceCoordinates.put(checkedPiece, homeCoordinates.get(checkedPiece)); // returns piece to its home position
             }
         }
         boardView.setPieceCoordinates(pieceCoordinates);
     }
+
+    private void undoMove() {
+        pieceCoordinates.put(chosenPieceToMove, oldCoordinates);
+        boardView.setPieceCoordinates(pieceCoordinates);
+        Log.e("Change Piece dialog", oldCoordinates.toString());
+    }
+
+
 
     private void nextFinishCoord(int stepsLeft) { // moves piece x number of steps forward and back in finish path
         boolean towardsGoal = true; // if heading towards or away from goal
