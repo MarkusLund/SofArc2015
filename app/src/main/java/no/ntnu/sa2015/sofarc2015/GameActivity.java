@@ -42,6 +42,8 @@ public class GameActivity extends Activity{
     private List<Point> bluePathCoordinates, redPathCoordinates, greenPathCoordinates, yellowPathCoordinates;
     private Dice dice;
 
+    private Point oldCoordinates = null;
+    private Map<String, Point> homeCoordinates;
     private char currentPlayer; //SAVE
     private char[] players = {'b','r','g','y'};
     private int index = 0;
@@ -84,6 +86,9 @@ public class GameActivity extends Activity{
 
         generateSoundFiles();
         getScreenSizes();
+
+        //Creating the initial hashmap with all the piece coordinates piece : Point
+        homeCoordinates = generateStartPositions();
 
         pieceNames = Arrays.asList("b1", "b2", "b3", "b4", "r1", "r2", "r3", "r4", "g1", "g2", "g3", "g4", "y1", "y2", "y3", "y4");
         blueCoordinates = new HashMap<>();
@@ -144,7 +149,8 @@ public class GameActivity extends Activity{
                 //Updates dice.roll value to new int, and updates the BoardView with the new dice value
                 if (!hasRolled) {
                     boardView.setDiceView(dice.rollDice());
-                    hasRolled = true;
+                    // TODO: Commented out for rolling multiple times
+                    //hasRolled = true;
                 }
             }
         });
@@ -290,8 +296,8 @@ public class GameActivity extends Activity{
     }
 
     private void changeButtonAction() { // implements changing of chosen piece functionality
+        String nextPiece = null;
         if (chosenPieceToMove == null) { // if no piece has been selected, choose first piece
-            String nextPiece = null;
             switch (currentPlayer) {
                 case 'b':
                     nextPiece = blueCoordinates.entrySet().iterator().next().getKey();
@@ -306,11 +312,9 @@ public class GameActivity extends Activity{
                     nextPiece = yellowCoordinates.entrySet().iterator().next().getKey();
                     break;
             }
-            boardView.setChosenPiece(nextPiece);
-            chosenPieceToMove = nextPiece;
-        }else { // if one piece has been selected, chose next possible piece in list
+        }
+        else { // if one piece has been selected, chose next possible piece in list
             String currentPiece = chosenPieceToMove;
-            String nextPiece;
             List<String> listCoordinates = new ArrayList<>();
 
             switch (currentPiece.charAt(0)) {
@@ -330,9 +334,9 @@ public class GameActivity extends Activity{
 
             Collections.sort(listCoordinates); // sorts list, b1, b2, b3, b4
             nextPiece = listCoordinates.get((listCoordinates.indexOf(currentPiece) + 1) % (listCoordinates.size()));
-            boardView.setChosenPiece(nextPiece);
-            chosenPieceToMove = nextPiece;
         }
+        boardView.setChosenPiece(nextPiece);
+        chosenPieceToMove = nextPiece;
     }
 
     private void chooseButtonAction(){
@@ -347,7 +351,8 @@ public class GameActivity extends Activity{
                     });
             AlertDialog alert = builder.create();
             alert.show();
-        }else if (chosenPieceToMove == null){
+        }
+        else if (chosenPieceToMove == null){
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.chooseButton_needChoice)
                     .setCancelable(false)
@@ -359,14 +364,59 @@ public class GameActivity extends Activity{
             AlertDialog alert = builder.create();
             alert.show();
         }
+        else if(dice.getRoll() != 6 && homeCoordinates.containsValue(pieceCoordinates.get(chosenPieceToMove))){
+            // Alerts players that move will result in skip
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setTitle(R.string.exit_home_title);
+            builder.setMessage(R.string.exit_home_text);
+            builder.setCancelable(false);
+
+            builder.setPositiveButton(R.string.exit_home_no_move, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    // no move is possible, end turn
+                    endTurn();
+                }
+            });
+
+            builder.setNeutralButton(R.string.exit_home_change_move, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    // change piece to move
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            WindowManager.LayoutParams wmlp = dialog.getWindow().getAttributes();
+
+            wmlp.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
+            wmlp.y = (int) boardView.getBoardHeight();   //y position
+
+            dialog.show();
+        }
+        else if (willStack()){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.chooseButton_noStacking)
+                    .setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            //do things
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
         else {
+
+            movePiece(); // move is done before
+
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
             builder.setTitle(R.string.end_turn_title);
+            builder.setCancelable(false);
 
             builder.setPositiveButton(R.string.end_turn_finish, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    movePiece();
+//                    movePiece();
 
                     endTurn();
                 }
@@ -375,13 +425,15 @@ public class GameActivity extends Activity{
             builder.setNeutralButton(R.string.end_turn_undo, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     // should first make move, then undo it when this button is pressed
+                    undoMove();
                 }
             });
+
 
             AlertDialog dialog = builder.create();
             WindowManager.LayoutParams wmlp = dialog.getWindow().getAttributes();
 
-            wmlp.gravity = Gravity.TOP | Gravity.LEFT;
+            wmlp.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
             wmlp.y = (int) boardView.getBoardHeight();   //y position
 
             dialog.show();
@@ -420,12 +472,17 @@ public class GameActivity extends Activity{
                 break;
         }
 
+        //check if a piece must be sent home, not needed if in home area and move results in win
+        if (pieceCoordinates.containsKey(chosenPieceToMove)){
+        sendPieceHome();
+        }
+
         //change current player
         switchBetweenColors();
 
         //set chosen piece to null
         chosenPieceToMove = null;
-        boardView.setChosenPiece(chosenPieceToMove);
+        boardView.setChosenPiece(null);
 
         //reset dice
         dice.resetDice();
@@ -454,14 +511,13 @@ public class GameActivity extends Activity{
                 break;
         }
         boardView.setPieceCoordinates(pieceCoordinates);
-
     }
 
     private void movePiece(){ // moves a piece x number of steps
 
         int diceRoll = dice.getRoll();
         int oldPathIndexOfPiece = getPathIndex(pieceCoordinates.get(chosenPieceToMove)); // gets index of current piece on path
-
+        oldCoordinates = pieceCoordinates.get(chosenPieceToMove); // oldCoordinates for undoMove
         if (pathCoordinates.contains(pieceCoordinates.get(chosenPieceToMove))){ // if the piece is on the Path
             for (int i = 0; i < diceRoll; i++) {
                 oldPathIndexOfPiece++; // moves the piece forward one step at a time
@@ -487,6 +543,7 @@ public class GameActivity extends Activity{
                 }
                 // implements wait/sleep
                 stepSleepTime(1000);
+
             }
         } // if the piece already is on the finishpath, run nexFinishCoord with x number of steps
         else if (bluePathCoordinates.contains(pieceCoordinates.get(chosenPieceToMove))){
@@ -503,33 +560,94 @@ public class GameActivity extends Activity{
         }
 
         else{// if in home area, move to start
-          //  if (dice.getRoll() == 6) {  // only allow roling a six the option of exiting home
+            if (dice.getRoll() == 6) {  // only allow roling a six the option of exiting home
+
                 exitHomeMove();
-            //}
+            }
         }
    }
+
+    private void sendPieceHome() { // if current piece lands on opponent, opponent is sent home
+        for (Map.Entry<String,Point> entry : pieceCoordinates.entrySet()) {
+            String checkedPiece = entry.getKey();
+            Point checkedPieceValue = entry.getValue();
+
+            // if the two pieces are different players, one is sent home
+            if(!chosenPieceToMove.equals(checkedPiece) && chosenPieceToMove.charAt(0) != checkedPiece.charAt(0) && pieceCoordinates.get(chosenPieceToMove).equals(checkedPieceValue)) {
+                pieceCoordinates.put(checkedPiece, homeCoordinates.get(checkedPiece)); // returns piece to its home position
+                playDontGetMadBroSound();
+            }
+        }
+        boardView.setPieceCoordinates(pieceCoordinates);
+    }
+
+    private void undoMove() {
+        pieceCoordinates.put(chosenPieceToMove, oldCoordinates);
+        boardView.setPieceCoordinates(pieceCoordinates);
+    }
+
+    private boolean willStack() {
+        if(homeCoordinates.containsValue(pieceCoordinates.get(chosenPieceToMove))){ // if piece is in home
+            for (Map.Entry<String , Point> entry : pieceCoordinates.entrySet()){
+                switch (chosenPieceToMove.charAt(0)) {
+                    case 'b':
+                        if (entry.getValue().equals(new Point (1, 6)) && entry.getKey().charAt(0) == 'b'){
+                            return true;
+                        }
+                        break;
+                    case 'r':
+                        if (entry.getValue().equals(new Point (8, 1)) && entry.getKey().charAt(0) == 'r'){
+                            return true;
+                        }
+                        break;
+                    case 'g':
+                        if (entry.getValue().equals(new Point (13, 8)) && entry.getKey().charAt(0) == 'g'){
+                            return true;
+                        }
+                        break;
+                    case 'y':
+                        if (entry.getValue().equals(new Point (6, 13)) && entry.getKey().charAt(0) == 'y'){
+                            return true;
+                        }
+                        break;
+
+                }
+            }
+        }
+        else if (pieceCoordinates.containsKey(chosenPieceToMove)){ // if chosen piece to move is on the path
+            int indexPiece = pathCoordinates.indexOf(pieceCoordinates.get(chosenPieceToMove));
+            indexPiece += dice.getRoll();
+            Point newCoordinates = pathCoordinates.get(indexPiece);
+            for (Map.Entry<String, Point> entry : pieceCoordinates.entrySet())
+            {
+                if(entry.getValue().equals(newCoordinates) && chosenPieceToMove.charAt(0) == entry.getKey().charAt(0)){
+                    return true;
+                }
+            }
+        }
+        // TODO: Piece is on the finishing path, no stacking in finisharea to be implemented if we have time
+        return false; // no stacking, move is doable
+    }
+
+
 
     private void nextFinishCoord(int stepsLeft) { // moves piece x number of steps forward and back in finish path
         boolean towardsGoal = true; // if heading towards or away from goal
         switch (currentPlayer) {
             case 'b':
                 int indexBlue = bluePathCoordinates.indexOf(pieceCoordinates.get(chosenPieceToMove)); //current index on finishPath
-                Log.e("initial indexBlue", indexBlue+"");
                 if (indexBlue + stepsLeft == 5){ // if moves result in entering goal, remove the piece
                     pieceCoordinates.remove(chosenPieceToMove);
                     blueCoordinates.remove(chosenPieceToMove);
-                    Log.e("Winner", indexBlue +"  "+ stepsLeft);
                     break;
                 }
                 for (int i = stepsLeft; i >= 1; i--) { // moves piece one step at a rime forward, and if enough moves, back again
-                    Log.e("for loop", i + "");
                     indexBlue = towardsGoal ? indexBlue + 1 : indexBlue - 1; // decides what direction to move piece
                     towardsGoal = indexBlue==5 ? !towardsGoal : towardsGoal; // changes direction of piece if index is 5 ( outofbounds )
                     if (indexBlue==5){
                         indexBlue = 4;
                         i--;
                     }
-                    Log.e("index", indexBlue + "");
                     pieceCoordinates.put(chosenPieceToMove, bluePathCoordinates.get(indexBlue));
                     // to add steps, implement wait/sleep
                     stepSleepTime(1000);
@@ -537,22 +655,18 @@ public class GameActivity extends Activity{
                 break;
             case 'r':
                 int indexRed = redPathCoordinates.indexOf(pieceCoordinates.get(chosenPieceToMove));
-                Log.e("initial indexRed", indexRed+"");
                 if (indexRed + stepsLeft == 5){
                     pieceCoordinates.remove(chosenPieceToMove);
                     redCoordinates.remove(chosenPieceToMove);
-                    Log.e("Winner", indexRed +"  "+ stepsLeft);
                     break;
                 }
                 for (int i = stepsLeft; i >= 1; i--) {
-                    Log.e("for loop", i + "");
                     indexRed = towardsGoal ? indexRed + 1 : indexRed - 1;
                     towardsGoal = indexRed==5 ? !towardsGoal : towardsGoal;
                     if (indexRed==5){
                         indexRed = 4;
                         i--;
                     }
-                    Log.e("index", indexRed + "");
                     pieceCoordinates.put(chosenPieceToMove, redPathCoordinates.get(indexRed));
                     // to add steps, implement wait/sleep
                     stepSleepTime(1000);
@@ -560,22 +674,18 @@ public class GameActivity extends Activity{
                 break;
             case 'g':
                 int indexGreen = greenPathCoordinates.indexOf(pieceCoordinates.get(chosenPieceToMove));
-                Log.e("initial indexGreen", indexGreen+"");
                 if (indexGreen + stepsLeft == 5){
                     pieceCoordinates.remove(chosenPieceToMove);
                     greenCoordinates.remove(chosenPieceToMove);
-                    Log.e("Winner", indexGreen +"  "+ stepsLeft);
                     break;
                 }
                 for (int i = stepsLeft; i >= 1; i--) {
-                    Log.e("for loop", i + "");
                     indexGreen = towardsGoal ? indexGreen + 1 : indexGreen - 1;
                     towardsGoal = indexGreen==5 ? !towardsGoal : towardsGoal;
                     if (indexGreen==5){
                         indexGreen = 4;
                         i--;
                     }
-                    Log.e("index", indexGreen + "");
                     pieceCoordinates.put(chosenPieceToMove, greenPathCoordinates.get(indexGreen));
                     // to add steps, implement wait/sleep
                     stepSleepTime(1000);
@@ -583,22 +693,18 @@ public class GameActivity extends Activity{
                 break;
             case 'y':
                 int indexYellow = yellowPathCoordinates.indexOf(pieceCoordinates.get(chosenPieceToMove));
-                Log.e("initial indexYellow", indexYellow+"");
                 if (indexYellow + stepsLeft == 5){
                     pieceCoordinates.remove(chosenPieceToMove);
                     yellowCoordinates.remove(chosenPieceToMove);
-                    Log.e("Winner", indexYellow +"  "+ stepsLeft);
                     break;
                 }
                 for (int i = stepsLeft; i >= 1; i--) {
-                    Log.e("for loop", i + "");
                     indexYellow = towardsGoal ? indexYellow + 1 : indexYellow - 1;
                     towardsGoal = indexYellow==5 ? !towardsGoal : towardsGoal;
                     if (indexYellow==5){
                         indexYellow = 4;
                         i--;
                     }
-                    Log.e("index", indexYellow + "");
                     pieceCoordinates.put(chosenPieceToMove, yellowPathCoordinates.get(indexYellow));
                     // to add steps, implement wait/sleep
                     stepSleepTime(1000);
@@ -614,6 +720,7 @@ public class GameActivity extends Activity{
 
     private void stepSleepTime(int time) { // when implemented, gives appearance of movement instead of teleportation of pieces
         //SystemClock.sleep(time);
+
     }
 
     private void switchBetweenColors() { // simple method that randomly??WUT choses what player to use

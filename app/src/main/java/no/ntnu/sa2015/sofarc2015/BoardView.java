@@ -5,8 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -122,6 +120,11 @@ public class BoardView extends View{
         for (Map.Entry<String, Point> entry : pieceCoordinates.entrySet())
         {
             drawPiece(canvas, entry.getKey());
+        }
+        if (chosenPiece != null) { // set to this upon switching colors
+            if (!chosenPiece.equals("none")) { // set to this initially
+                drawPiece(canvas, this.chosenPiece); // chosenPiece is drawn again so it ends ontop
+            }
         }
     }
 
