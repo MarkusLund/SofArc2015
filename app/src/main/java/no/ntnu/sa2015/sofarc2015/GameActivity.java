@@ -414,8 +414,10 @@ public class GameActivity extends Activity{
                 break;
         }
 
-        //check if a piece must be sent home
+        //check if a piece must be sent home, not needed if in home area and move results in win
+        if (pieceCoordinates.containsKey(chosenPieceToMove)){
         sendPieceHome();
+        }
 
         //change current player
         switchBetweenColors();
@@ -521,7 +523,6 @@ public class GameActivity extends Activity{
     private void undoMove() {
         pieceCoordinates.put(chosenPieceToMove, oldCoordinates);
         boardView.setPieceCoordinates(pieceCoordinates);
-        Log.e("Change Piece dialog", oldCoordinates.toString());
     }
 
 
