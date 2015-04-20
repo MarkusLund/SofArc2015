@@ -335,9 +335,51 @@ public class GameActivity extends Activity{
                     });
             AlertDialog alert = builder.create();
             alert.show();
-        }else if (chosenPieceToMove == null){
+        }
+        else if (chosenPieceToMove == null){
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.chooseButton_needChoice)
+                    .setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            //do things
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+        else if(dice.getRoll() != 6 && homeCoordinates.containsValue(pieceCoordinates.get(chosenPieceToMove))){
+            // Alerts players that move will result in skip
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setTitle(R.string.exit_home_title);
+            builder.setMessage(R.string.exit_home_text);
+            builder.setCancelable(false);
+
+            builder.setPositiveButton(R.string.exit_home_no_move, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    // no move is possible, end turn
+                    endTurn();
+                }
+            });
+
+            builder.setNeutralButton(R.string.exit_home_change_move, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    // change piece to move
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            WindowManager.LayoutParams wmlp = dialog.getWindow().getAttributes();
+
+            wmlp.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
+            wmlp.y = (int) boardView.getBoardHeight();   //y position
+
+            dialog.show();
+        }
+        else if (willStack()){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.chooseButton_noStacking)
                     .setCancelable(false)
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
@@ -375,7 +417,7 @@ public class GameActivity extends Activity{
             AlertDialog dialog = builder.create();
             WindowManager.LayoutParams wmlp = dialog.getWindow().getAttributes();
 
-            wmlp.gravity = Gravity.TOP | Gravity.LEFT;
+            wmlp.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
             wmlp.y = (int) boardView.getBoardHeight();   //y position
 
             dialog.show();
@@ -424,7 +466,7 @@ public class GameActivity extends Activity{
 
         //set chosen piece to null
         chosenPieceToMove = null;
-        boardView.setChosenPiece(chosenPieceToMove);
+        boardView.setChosenPiece(null);
 
         //reset dice
         dice.resetDice();
@@ -502,9 +544,10 @@ public class GameActivity extends Activity{
         }
 
         else{// if in home area, move to start
-          //  if (dice.getRoll() == 6) {  // only allow roling a six the option of exiting home
+            if (dice.getRoll() == 6) {  // only allow roling a six the option of exiting home
+
                 exitHomeMove();
-            //}
+            }
         }
    }
 
@@ -513,8 +556,10 @@ public class GameActivity extends Activity{
             String checkedPiece = entry.getKey();
             Point checkedPieceValue = entry.getValue();
 
+            // if the two pieces are different players, one is sent home
             if(!chosenPieceToMove.equals(checkedPiece) && chosenPieceToMove.charAt(0) != checkedPiece.charAt(0) && pieceCoordinates.get(chosenPieceToMove).equals(checkedPieceValue)) {
                 pieceCoordinates.put(checkedPiece, homeCoordinates.get(checkedPiece)); // returns piece to its home position
+                playDontGetMadBroSound();
             }
         }
         boardView.setPieceCoordinates(pieceCoordinates);
@@ -523,6 +568,49 @@ public class GameActivity extends Activity{
     private void undoMove() {
         pieceCoordinates.put(chosenPieceToMove, oldCoordinates);
         boardView.setPieceCoordinates(pieceCoordinates);
+    }
+
+    private boolean willStack() {
+        if(homeCoordinates.containsValue(pieceCoordinates.get(chosenPieceToMove))){ // if piece is in home
+            for (Map.Entry<String , Point> entry : pieceCoordinates.entrySet()){
+                switch (chosenPieceToMove.charAt(0)) {
+                    case 'b':
+                        if (entry.getValue().equals(new Point (1, 6)) && entry.getKey().charAt(0) == 'b'){
+                            return true;
+                        }
+                        break;
+                    case 'r':
+                        if (entry.getValue().equals(new Point (8, 1)) && entry.getKey().charAt(0) == 'r'){
+                            return true;
+                        }
+                        break;
+                    case 'g':
+                        if (entry.getValue().equals(new Point (13, 8)) && entry.getKey().charAt(0) == 'g'){
+                            return true;
+                        }
+                        break;
+                    case 'y':
+                        if (entry.getValue().equals(new Point (6, 13)) && entry.getKey().charAt(0) == 'y'){
+                            return true;
+                        }
+                        break;
+
+                }
+            }
+        }
+        else if (pieceCoordinates.containsKey(chosenPieceToMove)){ // if chosen piece to move is on the path
+            int indexPiece = pathCoordinates.indexOf(pieceCoordinates.get(chosenPieceToMove));
+            indexPiece += dice.getRoll();
+            Point newCoordinates = pathCoordinates.get(indexPiece);
+            for (Map.Entry<String, Point> entry : pieceCoordinates.entrySet())
+            {
+                if(entry.getValue().equals(newCoordinates) && chosenPieceToMove.charAt(0) == entry.getKey().charAt(0)){
+                    return true;
+                }
+            }
+        }
+        // TODO: Piece is on the finishing path, no stacking in finisharea to be implemented if we have time
+        return false; // no stacking, move is doable
     }
 
 

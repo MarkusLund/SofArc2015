@@ -7,7 +7,7 @@
     <string name="start_game">Start game</string>
     <string name="end_turn_title">END TURN?</string>
     <string name="end_turn_text">Are you sure you wish to end your turn?</string>
-    <string name="end_turn_undo">CHANGE PIECE</string>
+    <string name="end_turn_undo">UNDO MOVE</string>
     <string name="end_turn_finish">END TURN</string>
     <string name="help_title">HELP</string>
     <string name="help_close">Close</string>
@@ -24,20 +24,16 @@
         Official rules from:\n www.wikipedia.org/wiki/Ludo_(board_game)
     </string>
 
-
-
-
-
-
-
-
-
-
     <string name="chooseButton_needRoll">You must roll the dice!</string>
     <string name="chooseButton_needChoice">You must choose a piece to move.</string>
+    <string name="exit_home_title">Roll a 6 to exit home!</string>
+    <string name="exit_home_text">Sure you want to skip your turn?</string>
+    <string name="exit_home_no_move">END TURN</string>
+    <string name="exit_home_change_move">CHANGE PIECE</string>
     <string name="player_button_text">Player %1$d - %2$s</string>
     <string name="quit">Quit game?</string>
     <string name="really_quit">Do you really want to end the game?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="chooseButton_noStacking">You can\'t stack your pieces</string>
 </resources>
