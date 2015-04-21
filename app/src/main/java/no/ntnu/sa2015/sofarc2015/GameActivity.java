@@ -149,8 +149,7 @@ public class GameActivity extends Activity{
                 //Updates dice.roll value to new int, and updates the BoardView with the new dice value
                 if (!hasRolled) {
                     boardView.setDiceView(dice.rollDice());
-                    // TODO: Commented out for rolling multiple times
-                    //hasRolled = true;
+                    hasRolled = true;
                 }
             }
         });
