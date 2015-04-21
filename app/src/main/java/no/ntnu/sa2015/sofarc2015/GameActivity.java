@@ -617,7 +617,7 @@ public class GameActivity extends Activity{
         else if (pieceCoordinates.containsKey(chosenPieceToMove)){ // if chosen piece to move is on the path
             int indexPiece = pathCoordinates.indexOf(pieceCoordinates.get(chosenPieceToMove));
             indexPiece += dice.getRoll();
-            Point newCoordinates = pathCoordinates.get(indexPiece);
+            Point newCoordinates = pathCoordinates.get(indexPiece%52);
             for (Map.Entry<String, Point> entry : pieceCoordinates.entrySet())
             {
                 if(entry.getValue().equals(newCoordinates) && chosenPieceToMove.charAt(0) == entry.getKey().charAt(0)){
