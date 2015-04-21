@@ -64,6 +64,11 @@ public class GameActivity extends Activity{
         if (savedInstanceState != null) {
             pieceCoordinates = (HashMap<String, Point>) savedInstanceState.getSerializable("Coordinates");
             currentPlayer = savedInstanceState.getChar("currentPlayer");
+            state.getP1().setColour((PlayerColour) savedInstanceState.getSerializable("P1Colour"));
+            state.getP2().setColour((PlayerColour) savedInstanceState.getSerializable("P2Colour"));
+            state.getP3().setColour((PlayerColour) savedInstanceState.getSerializable("P3Colour"));
+            state.getP4().setColour((PlayerColour) savedInstanceState.getSerializable("P4Colour"));
+
         } else {
             //Creating the initial hashmap with all the piece coordinates piece : Point
             pieceCoordinates = generateStartPositions();
@@ -655,8 +660,6 @@ public class GameActivity extends Activity{
         return false; // no stacking, move is doable
     }
 
-
-
     private void nextFinishCoord(int stepsLeft) { // moves piece x number of steps forward and back in finish path
         boolean towardsGoal = true; // if heading towards or away from goal
         switch (currentPlayer) {
@@ -746,13 +749,11 @@ public class GameActivity extends Activity{
 
     private void stepSleepTime(int time) { // when implemented, gives appearance of movement instead of teleportation of pieces
         //SystemClock.sleep(time);
-
     }
 
     private void switchBetweenColors() { // simple method that randomly??WUT choses what player to use
         currentPlayer = players[++index%4];
     }
-
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -778,6 +779,10 @@ public class GameActivity extends Activity{
     protected void onSaveInstanceState(Bundle outState) {
         outState.putChar("currentPlayer", currentPlayer);
         outState.putSerializable("Coordinates", pieceCoordinates);
+        outState.putSerializable("P1Colour", state.getP1().getColour());
+        outState.putSerializable("P2Colour", state.getP2().getColour());
+        outState.putSerializable("P3Colour", state.getP3().getColour());
+        outState.putSerializable("P4Colour", state.getP4().getColour());
         super.onSaveInstanceState(outState);
     }
 
