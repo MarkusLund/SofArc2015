@@ -24,7 +24,7 @@ public class BoardView extends View{
     private final int textSize;
     private final int offset;
 
-    private StartGameState state = StartGameState.getInstance();
+    StartGameState state = StartGameState.getInstance();
 
     private int diceRoll = 0;
     private String chosenPiece = "none"; // Set to prevent nullPointerException

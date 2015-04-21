@@ -37,12 +37,20 @@ public class PlayerState {
         }
     }
 
+    public void setColour(PlayerColour c) {
+        colour = c;
+    }
+
     public String getStateString() {
         return type.getState();
     }
 
     public int getColourCode(){
         return colour.getColourCode();
+    }
+
+    public PlayerColour getColour() {
+        return colour;
     }
 
     public Integer getPlayerId() {
