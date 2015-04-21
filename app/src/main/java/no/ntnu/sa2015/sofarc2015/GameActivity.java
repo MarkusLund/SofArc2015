@@ -177,7 +177,7 @@ public class GameActivity extends Activity{
     }
 
     private void generateSoundFiles(){
-        nofSoundFiles = 7;
+        nofSoundFiles = 10;
         soundFiles = new int[nofSoundFiles];
         soundFiles[0] = R.raw.danish;
         soundFiles[1] = R.raw.english;
@@ -186,6 +186,9 @@ public class GameActivity extends Activity{
         soundFiles[4] = R.raw.norsk;
         soundFiles[5] = R.raw.norwegian;
         soundFiles[6] = R.raw.swedish;
+        soundFiles[7] = R.raw.russian;
+        soundFiles[8] = R.raw.chinese;
+        soundFiles[9] = R.raw.french;
     }
 
 
