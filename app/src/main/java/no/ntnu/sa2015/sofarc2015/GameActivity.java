@@ -149,8 +149,7 @@ public class GameActivity extends Activity{
                 //Updates dice.roll value to new int, and updates the BoardView with the new dice value
                 if (!hasRolled) {
                     boardView.setDiceView(dice.rollDice());
-                    // TODO: Commented out for rolling multiple times
-                    //hasRolled = true;
+                    hasRolled = true;
                 }
             }
         });
@@ -393,18 +392,18 @@ public class GameActivity extends Activity{
 
             dialog.show();
         }
-        else if (willStack()){
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.chooseButton_noStacking)
-                    .setCancelable(false)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            //do things
-                        }
-                    });
-            AlertDialog alert = builder.create();
-            alert.show();
-        }
+//        else if (willStack()){ // willStack method a bit buggy, have therfore turned it of.
+//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//            builder.setTitle(R.string.chooseButton_noStacking)
+//                    .setCancelable(false)
+//                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int id) {
+//                            //do things
+//                        }
+//                    });
+//            AlertDialog alert = builder.create();
+//            alert.show();
+//        }
         else {
 
             movePiece(); // move is done before
@@ -586,7 +585,7 @@ public class GameActivity extends Activity{
         boardView.setPieceCoordinates(pieceCoordinates);
     }
 
-    private boolean willStack() {
+    private boolean willStack() { // home stackable check works, the rest... not som much....
         if(homeCoordinates.containsValue(pieceCoordinates.get(chosenPieceToMove))){ // if piece is in home
             for (Map.Entry<String , Point> entry : pieceCoordinates.entrySet()){
                 switch (chosenPieceToMove.charAt(0)) {
@@ -614,14 +613,38 @@ public class GameActivity extends Activity{
                 }
             }
         }
-        else if (pieceCoordinates.containsKey(chosenPieceToMove)){ // if chosen piece to move is on the path
+        else if (pieceCoordinates.containsKey(chosenPieceToMove) && pathCoordinates.contains(pieceCoordinates.get(chosenPieceToMove))){ // if chosen piece to move is on the path
             int indexPiece = pathCoordinates.indexOf(pieceCoordinates.get(chosenPieceToMove));
-            indexPiece += dice.getRoll();
-            Point newCoordinates = pathCoordinates.get(indexPiece);
-            for (Map.Entry<String, Point> entry : pieceCoordinates.entrySet())
-            {
+            int movedIndexPiece = indexPiece + dice.getRoll();
+            Point newCoordinates = pathCoordinates.get(movedIndexPiece%52);
+            for (Map.Entry<String, Point> entry : pieceCoordinates.entrySet()) {
                 if(entry.getValue().equals(newCoordinates) && chosenPieceToMove.charAt(0) == entry.getKey().charAt(0)){
-                    return true;
+                    for (int i = indexPiece; i < movedIndexPiece; i++){
+                        switch (chosenPieceToMove.charAt(0)){
+                            case ('b'):
+                                if(i == 52){
+                                    return false;
+                                }
+                                break;
+                            case ('r'):
+                                if(i == 13){
+                                    return false;
+                                }
+                                break;
+                            case ('g'):
+                                if(i == 26){
+                                    return false;
+                                }
+                                break;
+                            case ('y'):
+                                if(i == 39){
+                                    return false;
+                                }
+                                break;
+                            default:
+                                return true;
+                        }
+                    }
                 }
             }
         }

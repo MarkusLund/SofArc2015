@@ -121,9 +121,11 @@ public class BoardView extends View{
         {
             drawPiece(canvas, entry.getKey());
         }
-        if (chosenPiece != null) { // set to this upon switching colors
-            if (!chosenPiece.equals("none")) { // set to this initially
-                drawPiece(canvas, this.chosenPiece); // chosenPiece is drawn again so it ends ontop
+        if(pieceCoordinates.containsKey(chosenPiece)){
+            if (chosenPiece != null) { // set to this upon switching colors
+                if (!chosenPiece.equals("none")) { // set to this initially
+                    drawPiece(canvas, this.chosenPiece); // chosenPiece is drawn again so it ends ontop
+                }
             }
         }
     }
