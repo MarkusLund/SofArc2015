@@ -613,14 +613,35 @@ public class GameActivity extends Activity{
                 }
             }
         }
-        else if (pieceCoordinates.containsKey(chosenPieceToMove)){ // if chosen piece to move is on the path
+        else if (pieceCoordinates.containsKey(chosenPieceToMove) && pathCoordinates.contains(pieceCoordinates.get(chosenPieceToMove))){ // if chosen piece to move is on the path
             int indexPiece = pathCoordinates.indexOf(pieceCoordinates.get(chosenPieceToMove));
             indexPiece += dice.getRoll();
             Point newCoordinates = pathCoordinates.get(indexPiece%52);
             for (Map.Entry<String, Point> entry : pieceCoordinates.entrySet())
             {
                 if(entry.getValue().equals(newCoordinates) && chosenPieceToMove.charAt(0) == entry.getKey().charAt(0)){
-                    return true;
+                    switch (chosenPieceToMove.charAt(0)){
+                        case ('b'):
+                            if(indexPiece <= 51){
+                                return true;
+                            }
+                            break;
+                        case ('r'):
+                            if(indexPiece <= 12){
+                                return true;
+                            }
+                            break;
+                        case ('g'):
+                            if(indexPiece <= 25){
+                                return true;
+                            }
+                            break;
+                        case ('y'):
+                            if(indexPiece <= 38){
+                                return true;
+                            }
+                            break;
+                    }
                 }
             }
         }
